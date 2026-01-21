@@ -5,7 +5,7 @@
 <div>
     <nav>
         <span><a href="/"><img width="50" src="/static/favicon.png" alt="logo"></span></a>
-        <div>
+        <div><!--
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                         {% for category, message in messages %}
@@ -13,6 +13,7 @@
                         {% endfor %}
                 {% endif %}
             {% endwith %}
+            -->
             <a href="/passwords" method="GET"><button class="top-buttons" id="dash-passwords">My Passwords</button></a>
             <a href="/add-password" method="GET"><button class="top-buttons" id="add_p">Add Password</button></a>
             <a href="/del-password" method="GET"><button class="top-buttons" id="del_p">Delete Password</button></a>

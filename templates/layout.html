@@ -2,14 +2,14 @@
 <html lang="en">
 
 <head>
-  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+  <title>PassVault</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PassVault</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+  <link rel="icon" href="{{ url_for('static', path='/favicon.ico') }}" type="image/x-icon">
 </head>
 
-<body>w
+<body>
   <div id="glow"></div>
   {% block main %}
 
@@ -24,7 +24,7 @@
   });
 </script>
 <script>
-  const snowCount = 50; // Number of snowflakes
+  const snowCount = 60; // Number of snowflakes
   for (let i = 0; i < snowCount; i++) {
     const snowflake = document.createElement('div');
     snowflake.classList.add('snowflake');
