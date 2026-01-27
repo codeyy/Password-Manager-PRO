@@ -1,13 +1,14 @@
 import os
-import sqlite3
 import asyncio
-from fastapi import FastAPI, Request
+import sqlite3
+from utils import strength, retime
 from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI, Request, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
-from werkzeug.security import generate_password_hash, check_password_hash
 from security import gen_salt, derive_key, encrypt_data, decrypt_data
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 conn = sqlite3.connect('passvault.db', check_same_thread=False)
@@ -19,14 +20,13 @@ templates = Jinja2Templates(directory="templates")
 app.add_middleware(
     SessionMiddleware,
     secret_key=os.urandom(24),
-    https_only=True
+    https_only=False
 )
-
 
 
 @app.get("/")
 def home(request: Request):
-    if "user" not in request.session:
+    if not request.session.get("user_id", None):
         return RedirectResponse('/login')
 
     entry = db.execute("SELECT service, username, category FROM passwords WHERE user_id = ?",(request.session['user_id'],))
@@ -36,34 +36,239 @@ def home(request: Request):
 
     return templates.TemplateResponse(
         "dashboard.html", 
-        {"request": request, "title": "FastAPI Demo", "name": "User"}, entries=entries
+        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "entries": entries}
     )
 
 
 @app.post("/login")
 async def login(request: Request):
     form_data = await request.form()
-    username = form_data.get('username')
-    password = form_data.get('password')
+    
+    username = form_data.get("username")
+    password = form_data.get("password")
 
     db.execute("SELECT id, hashed_password, salt FROM users WHERE username = ?", (username,))
     user = db.fetchone()
-
+    
     if user and check_password_hash(user[1], password):
-        request.session['user_id'] = user[0]
-        #flash("loged in")
-        return RedirectResponse('/')
+        print("here")
+        request.session["user_id"] = user[0]
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     else:
         return templates.TemplateResponse(
         "login.html", 
-        {"request": request, "title": "FastAPI Demo", "name": "User"}, error="Invalid Credentials"
+        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P" , "error": "Invalid Credentials"}
     )
-
 
 @app.get("/login")
 def get_login(request: Request):
     return templates.TemplateResponse(
         "login.html", 
-        {"request": request, "title": "FastAPI Demo", "name": "User"},
+        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
     )
 
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse('/')
+
+@app.post("/register")
+async def register(request=Request):
+    form_data = await request.form()
+    
+    username = form_data.get("username")
+    password = form_data.get("password")
+
+    # Check if username already exists
+    db.execute("SELECT id FROM users WHERE username = ?", (username,))
+    if db.fetchone():
+        print("Username already exists!")
+        return RedirectResponse('/register')
+    
+    hashed_password = generate_password_hash(password)
+    salt = gen_salt()
+
+    # Save username and hashed_password to database
+    db.execute("INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)", (username, hashed_password, salt))
+    conn.commit()
+
+    return RedirectResponse('/login')
+
+@app.get("/register")
+def get_register(request: Request):
+    return templates.TemplateResponse(
+        "register.html", 
+        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
+    )
+    
+
+
+@app.api_route('/add-password', methods=['GET', 'POST'])
+async def add_password(request: Request):
+    if not request.session.get("user_id", None):
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    if request.method == 'POST':
+        form_data = await request.form()
+   
+        service = form_data.get('service').upper()
+        username = form_data.get("username")
+        password = form_data.get("password")
+        category = form_data.get('category').upper()
+
+        master_password = form_data.get('master_password')
+        db.execute("SELECT username, hashed_password, salt FROM users WHERE id = ?", (request.session['user_id'],))
+        user = db.fetchone()
+        salt = user[2]
+        check = db.execute("SELECT service, username FROM passwords WHERE service = ? AND username = ?", (service, username))
+        if check.fetchone() :
+            print("Username already exists!")
+            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+        if user and check_password_hash(user[1], master_password):
+
+            # encrypt the password before saving
+            encrypted_password = encrypt_data(derive_key(master_password,salt), password)
+            db.execute("INSERT INTO passwords (user_id, service, username, password_encrypted, category) VALUES (?, ?, ?, ?, ?)",
+                       (request.session['user_id'], service, username, encrypted_password, category))
+            conn.commit()
+            print("Added successfully!")
+
+            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+        else:
+            return RedirectResponse('/logout')
+
+    elif request.method == 'GET':
+        return templates.TemplateResponse(
+        "add_password.html", 
+        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
+    )
+
+
+@app.api_route('/del-password', methods=['GET', 'POST'])
+async def delete_password(request=Request):
+    if request.method == 'POST':
+        if not request.session.get("user_id", None):
+            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+
+        form_data = await request.form()
+   
+        service = form_data.get('service').upper()
+        username = form_data.get("username")
+        master_password = form_data.get("master_password")
+        db.execute("SELECT username, hashed_password FROM users WHERE id = ?", (request.session['user_id'],))
+        user = db.fetchone()
+        if not user or not check_password_hash(user[1], master_password):
+            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+        check = db.execute("SELECT service, username FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
+        if not check.fetchone() :
+            print("invalid service or username!")
+            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+
+        db.execute("DELETE FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
+        conn.commit()
+
+        print("Deleted successfully!")
+
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    elif request.method == 'GET':
+        return templates.TemplateResponse(
+        "del_password.html", 
+        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "method": "get"},
+    )
+
+
+@app.api_route('/passwords', methods=['GET', 'POST'])
+async def passwords(request: Request):
+    if not request.session.get("user_id", None):
+        return templates.TemplateResponse(
+        "error.html", 
+        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "error": "401 Unauthorized"},
+    )
+    if request.method == 'POST':
+        form_data = await request.form()
+   
+        password = form_data.get("password")
+
+        db.execute("SELECT username, hashed_password FROM users WHERE id = ?", (request.session['user_id'],))
+        user = db.fetchone()
+        username = user[0]
+        if user and check_password_hash(user[1], password):
+            salt = db.execute("SELECT salt FROM users WHERE username = ?", (username,)).fetchone()[0]
+            entry = db.execute("SELECT service, username, password_encrypted, category, updated_at FROM passwords WHERE user_id = ?", (request.session['user_id'],))
+            entries = entry.fetchall()
+            decrypted_entries = []
+            for e in entries:
+                decrypted_password = decrypt_data(derive_key(password,salt), e[2])
+                decrypted_entries.append((e[0], e[1], decrypted_password, e[3], e[4]))
+
+            if not decrypted_entries:
+                decrypted_entries = None
+
+            return templates.TemplateResponse(
+                            "passwords.html", 
+                            {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "entries": decrypted_entries},
+                        )
+        else:
+            return RedirectResponse('/logout')
+
+    elif request.method == 'GET':
+        entry = db.execute("SELECT service, username, password_encrypted, category, updated_at FROM passwords WHERE user_id = ?", (request.session['user_id'],))
+        entries = entry.fetchall()
+        raw_entries = [(e[0], e[1], "********", e[3], e[4]) for e in entries]
+        return templates.TemplateResponse(
+        "passwords.html", 
+        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "entries": raw_entries},
+    )
+
+
+@app.post('/passwords_strength')
+async def password_strength(request: Request):
+    form_data = await request.form()
+    
+    password = form_data.get("password")
+
+    stren = strength(password)
+    entropy = stren[0]
+    est_time = stren[1]
+    time_score = retime(est_time)
+
+    evall = [entropy, time_score]
+    return templates.TemplateResponse(
+                            "password_strength.html", 
+                            {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "eval": evall},
+                        )
+@app.get("/passwords_strength")
+def get_password_strength(request: Request):
+    return templates.TemplateResponse(
+                        "password_strength.html", 
+                        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
+                    )
+
+
+
+
+
+
+
+#@app.exception_handler(404)
+#def page_not_found(request: Request):
+#    return templates.TemplateResponse('error.html',
+#    {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
+#    error="404- Not Found",
+#    ), 404
+#@app.exception_handler(500)
+#def internal_server_error(request: Request):
+#    return templates.TemplateResponse('error.html', 
+#    {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
+#    error="500- Internal Server Error",
+#    ), 500
+#@app.exception_handler(Exception)
+#def handle_exception(e, request: Request):
+#    return templates.TemplateResponse('error.html', 
+#    {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
+#    error="-An error occurred: " + str(e),
+#    ), 500
+#
+
+
+if __name__ == '__main__':
+    os.system("uvicorn main:app --reload")

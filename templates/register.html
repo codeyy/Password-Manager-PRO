@@ -5,15 +5,7 @@
     <span></span>
     <a href="/login" class="form-button" style="text-decoration: none; float: right; margin-right: 7vw">Login</a>
 </nav>
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-            {% for category, message in messages %}
-            <button class="update_msg form-button" style="float: right; margin-right: 8vw">
-                {{message}}
-            </button>
-            {% endfor %}
-    {% endif %}
-{% endwith %}
+
 
 <form method="POST" action="/register" class="reg_form">
 

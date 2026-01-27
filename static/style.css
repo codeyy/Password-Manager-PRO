@@ -311,6 +311,13 @@ th {
     text-align: center;
     font-family: 'Poppins';
 }
+.ttttttttttt{
+    color: rgba(18, 81, 255, 0.627);
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Poppins';
+}
 
 .update_msg{
     color: rgb(255, 0, 0);
@@ -325,4 +332,35 @@ th {
     cursor: default;
     pointer-events: none;
     text-shadow: 0 0 10px rgba(97, 255, 255, 0.52);
+}
+
+.gradient-progress {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin: 15px 0;
+}
+
+.gradient-progress::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00ff88, #00ccff, #0088ff, #ff00ff);
+    background-size: 200% 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 200, 0.6);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
