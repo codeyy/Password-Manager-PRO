@@ -51,7 +51,6 @@ async def login(request: Request):
     user = db.fetchone()
     
     if user and check_password_hash(user[1], password):
-        print("here")
         request.session["user_id"] = user[0]
         return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     else:

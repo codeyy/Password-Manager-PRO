@@ -179,4 +179,4 @@ def handle_exception(e):
     return render_template('error.html', error="-An error occurred: " + str(e)), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    os.system("flask run")
