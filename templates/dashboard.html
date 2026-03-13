@@ -9,9 +9,12 @@
             <a href="/passwords" method="GET"><button class="top-buttons" id="dash-passwords">My Passwords</button></a>
             <div class="dropdown">
                 <button class="top-buttons" id="dash-menu">Menu</button>
-                <div class="dropdown-content">
+                <div class="dropdown-content" id="dropdown">
                     <a href="/add-password">Add Password</a>
                     <a href="/del-password">Delete Password</a>
+                    <a href="/passwords_strength">Check Password Strength</a>
+                    <a href="/hash_password">Hash Password</a>
+                    <a href="/verifyHash">Verify Hash</a>
                 </div>
             </div>
             <a href="/logout" method="GET"><button class="top-buttons" id="home">Logout</button></a>
@@ -58,5 +61,23 @@
     {% endif %}
 
 </div>
+<script>
+    let hoverTimeout;
+    const element = document.querySelector('.dropdown-content');
+    const delay = Math.random() * 300 + 200; // Delay between 200ms - 500ms
+
+    // Mouse Enter: Cancel any pending hide actions
+    element.addEventListener('mouseenter', () => {
+        clearTimeout(hoverTimeout);
+        console.log('Mouse in - show content');
+    });
+
+    // Mouse Leave: Start timer to hide content
+    element.addEventListener('mouseleave', () => {
+        hoverTimeout = setTimeout(() => {
+            console.log('Mouse out - hide content');
+        }, delay);
+    });
+</script>
 
 {% endblock %}
