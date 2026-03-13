@@ -1,11 +1,13 @@
 import os
-import asyncio
 import sqlite3
-from utils import strength, retime
+import asyncio
+from typing import Annotated
+from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, Request, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
+from utils import strength, retime, hasher, verify
+from fastapi import FastAPI, Request, status, Form
 from starlette.middleware.sessions import SessionMiddleware
 from security import gen_salt, derive_key, encrypt_data, decrypt_data
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -20,13 +22,14 @@ templates = Jinja2Templates(directory="templates")
 app.add_middleware(
     SessionMiddleware,
     secret_key=os.urandom(24),
-    https_only=False
+    https_only=False,
+    max_age= 14400
 )
 
 
 @app.get("/")
 def home(request: Request):
-    if not request.session.get("user_id", None):
+    if not request.session.get("user_id"):
         return RedirectResponse('/login')
 
     entry = db.execute("SELECT service, username, category FROM passwords WHERE user_id = ?",(request.session['user_id'],))
@@ -41,11 +44,7 @@ def home(request: Request):
 
 
 @app.post("/login")
-async def login(request: Request):
-    form_data = await request.form()
-    
-    username = form_data.get("username")
-    password = form_data.get("password")
+async def login(username: Annotated[str, Form()], password: Annotated[str, Form()], request: Request):
 
     db.execute("SELECT id, hashed_password, salt FROM users WHERE username = ?", (username,))
     user = db.fetchone()
@@ -72,11 +71,10 @@ def logout(request: Request):
     return RedirectResponse('/')
 
 @app.post("/register")
-async def register(request=Request):
-    form_data = await request.form()
-    
-    username = form_data.get("username")
-    password = form_data.get("password")
+async def register(username: Annotated[str, Form()], password: Annotated[str, Form()]):
+    #form_data = await request.form()
+    #username = form_data.get("username")
+    #password = form_data.get("password")
 
     # Check if username already exists
     db.execute("SELECT id FROM users WHERE username = ?", (username,))
@@ -91,7 +89,7 @@ async def register(request=Request):
     db.execute("INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)", (username, hashed_password, salt))
     conn.commit()
 
-    return RedirectResponse('/login')
+    return RedirectResponse('/login', status_code=status.HTTP_303_SEE_OTHER)
 
 @app.get("/register")
 def get_register(request: Request):
@@ -129,7 +127,6 @@ async def add_password(request: Request):
             db.execute("INSERT INTO passwords (user_id, service, username, password_encrypted, category) VALUES (?, ?, ?, ?, ?)",
                        (request.session['user_id'], service, username, encrypted_password, category))
             conn.commit()
-            print("Added successfully!")
 
             return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
         else:
@@ -142,37 +139,47 @@ async def add_password(request: Request):
     )
 
 
-@app.api_route('/del-password', methods=['GET', 'POST'])
-async def delete_password(request=Request):
-    if request.method == 'POST':
-        if not request.session.get("user_id", None):
-            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
-
-        form_data = await request.form()
-   
-        service = form_data.get('service').upper()
-        username = form_data.get("username")
-        master_password = form_data.get("master_password")
-        db.execute("SELECT username, hashed_password FROM users WHERE id = ?", (request.session['user_id'],))
-        user = db.fetchone()
-        if not user or not check_password_hash(user[1], master_password):
-            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
-        check = db.execute("SELECT service, username FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
-        if not check.fetchone() :
-            print("invalid service or username!")
-            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
-
-        db.execute("DELETE FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
-        conn.commit()
-
-        print("Deleted successfully!")
-
+@app.post('/del-password')
+async def delete_password(request: Request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        
         return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
-    elif request.method == 'GET':
-        return templates.TemplateResponse(
-        "del_password.html", 
-        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "method": "get"},
-    )
+    
+    form_data = await request.form()
+    
+    service = form_data.get('service').upper()
+    
+    username = form_data.get("username")
+    
+    master_password = form_data.get("master_password")
+    
+    db.execute("SELECT username, hashed_password FROM users WHERE id = ?", (request.session['user_id'],))
+    
+    user = db.fetchone()
+    
+    if not user or not check_password_hash(user[1], master_password):
+        
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    
+    check = db.execute("SELECT service, username FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
+    
+    if not check.fetchone():
+        
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    
+    db.execute("DELETE FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
+    conn.commit()
+        
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+        
+@app.get('/del-password')
+def get_del_password(request: Request):
+    return templates.TemplateResponse(
+                        "del_password.html", 
+                        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
+                    )
+
 
 
 @app.api_route('/passwords', methods=['GET', 'POST'])
@@ -239,6 +246,47 @@ async def password_strength(request: Request):
 def get_password_strength(request: Request):
     return templates.TemplateResponse(
                         "password_strength.html", 
+                        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
+                    )
+
+@app.post('/hash_password')
+async def hash_passwords(request: Request):
+    form_data = await request.form()
+    
+    password = form_data.get("password")
+
+    stren = hasher(password)
+
+    return templates.TemplateResponse(
+                            "hash_password.html", 
+                            {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "eval": stren},
+                        )
+@app.get("/hash_password")
+def get_hash_passwords(request: Request):
+    return templates.TemplateResponse(
+                        "hash_password.html", 
+                        {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
+                    )
+
+
+@app.post('/verifyHash')
+async def verifyHash(request: Request):
+    form_data = await request.form()
+    
+    password = form_data.get("password")
+    phash = form_data.get("hash")
+    algo = form_data.get("algorithm")
+
+    stren = verify(phash, password, algo)
+    e = "Matched" if stren else "Not Matched"
+    return templates.TemplateResponse(
+                            "verify_hash.html", 
+                            {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "eval": e},
+                        )
+@app.get("/verifyHash")
+def get_verifyHash(request: Request):
+    return templates.TemplateResponse(
+                        "verify_hash.html", 
                         {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
                     )
 
