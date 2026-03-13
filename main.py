@@ -5,7 +5,7 @@ from typing import Annotated
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
 from utils import strength, retime, hasher, verify
 from fastapi import FastAPI, Request, status, Form
 from starlette.middleware.sessions import SessionMiddleware
@@ -226,22 +226,34 @@ async def passwords(request: Request):
     )
 
 
-@app.post('/passwords_strength')
+@app.post('/api/passwords_strength')
 async def password_strength(request: Request):
-    form_data = await request.form()
+    json_data = await request.json()
     
-    password = form_data.get("password")
+    password = json_data.get("password")
 
     stren = strength(password)
     entropy = stren[0]
-    est_time = stren[1]
-    time_score = retime(est_time)
+    time_score = retime(stren[1])
 
-    evall = [entropy, time_score]
-    return templates.TemplateResponse(
-                            "password_strength.html", 
-                            {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "eval": evall},
-                        )
+    spicer = 0 #spicer is solely to make progress bar feel more alive without unnecessarily increasing the complexity of program
+    if time_score[1] >= 1:
+        import random
+        spicer = random.uniform(0, 1)
+
+    score = round(((time_score[1]*10) + spicer), 2)
+
+    
+    colour = round(
+        (((score-1)/99)*256)
+    )
+    print(colour)
+    return JSONResponse(content={"entropy"   : entropy,
+                                 "time_score": min(score, 100),
+                                 "est_time"  : time_score[0],
+                                 "colour"    : colour
+                                 })
+
 @app.get("/passwords_strength")
 def get_password_strength(request: Request):
     return templates.TemplateResponse(
