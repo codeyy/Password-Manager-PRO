@@ -5,12 +5,12 @@ from typing import Annotated
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
 from utils import strength, retime, hasher, verify
 from fastapi import FastAPI, Request, status, Form
 from starlette.middleware.sessions import SessionMiddleware
 from security import gen_salt, derive_key, encrypt_data, decrypt_data
 from werkzeug.security import generate_password_hash, check_password_hash
+from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
 
 
 conn = sqlite3.connect('passvault.db', check_same_thread=False)
@@ -79,8 +79,7 @@ async def register(username: Annotated[str, Form()], password: Annotated[str, Fo
     # Check if username already exists
     db.execute("SELECT id FROM users WHERE username = ?", (username,))
     if db.fetchone():
-        print("Username already exists!")
-        return RedirectResponse('/register')
+        return RedirectResponse('/', status_code=status.HTTP_303_SEE_OTHER)
     
     hashed_password = generate_password_hash(password)
     salt = gen_salt()
@@ -90,6 +89,16 @@ async def register(username: Annotated[str, Form()], password: Annotated[str, Fo
     conn.commit()
 
     return RedirectResponse('/login', status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/api/checkUsername")
+async def checkUsername(request: Request):
+    json_data = await request.json()
+    username = json_data.get("username")
+    db.execute("SELECT id FROM users WHERE username = ?", (username,))
+    if db.fetchone():
+        return JSONResponse(content={"status": True})
+    return JSONResponse(content={"status": False})
+
 
 @app.get("/register")
 def get_register(request: Request):
@@ -240,6 +249,7 @@ async def password_strength(request: Request):
     if time_score[1] >= 1:
         import random
         spicer = random.uniform(0, 1)
+        #spicer = float(f"0.{str(int(entropy))}") #untag it incase unpredictability bicomes an issue;
 
     score = round(((time_score[1]*10) + spicer), 2)
 
