@@ -50,19 +50,19 @@ def retime(est_time):
         sen = ("ETERNITY !!")
         score = 10
         return [sen, score]
-    elif est_time < 0.24:
+    elif est_time < 1:
         sen = ("Instant!")
         score = 0
         return [sen, score]
-    elif est_time < 0:
-        sen = ("Less then a second")
+    elif est_time < 60:
+        sen = ("Less then a minute")
         score = 1
         return [sen, score]
-    elif est_time < 72000:
+    elif est_time < 86400:
         sen = ("about a Day")
         score = 2
         return [sen, score]
-    elif est_time < 504000:
+    elif est_time < 604800:
         sen = ("about a Week")
         score = 3
         return [sen, score]
@@ -108,3 +108,41 @@ def strength_check(password):
     print(f"  Password Strength SCORE:    {time_score[1]}\n")
 
     return 0
+
+def hasher(password, algo="sha256"):
+    import hashlib
+    
+    password = password.encode("utf-8")
+    hashed = 0
+    if algo.lower() == "sha256":
+        hashed = hashlib.sha256(password).hexdigest()
+    elif algo.lower() == "sha224":
+        hashed = hashlib.sha224(password).hexdigest()
+    elif algo.lower() == "sha384":
+        hashed = hashlib.sha384(password).hexdigest()
+    elif algo.lower() == "sha512":
+        hashed = hashlib.sha512(password).hexdigest()
+    else:
+        print("Algorithm unrecognizable")
+        return
+
+    print(f"\n  Hash:   {hashed}\n")
+    return hashed
+
+def verify(phash, password, algo):
+    import hashlib
+    password = password.encode("utf-8")
+    hashed = 0
+    if algo.lower() == "sha256":
+        hashed = hashlib.sha256(password).hexdigest()
+    elif algo.lower() == "sha224":
+        hashed = hashlib.sha224(password).hexdigest()
+    elif algo.lower() == "sha384":
+        hashed = hashlib.sha384(password).hexdigest()
+    elif algo.lower() == "sha512":
+        hashed = hashlib.sha512(password).hexdigest()
+    else:
+        print("Algorithm unrecognizable")
+        return
+
+    return phash == hashed
