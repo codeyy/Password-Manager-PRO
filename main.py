@@ -45,7 +45,9 @@ def home(request: Request):
 
 @app.post("/login")
 async def login(username: Annotated[str, Form()], password: Annotated[str, Form()], request: Request):
-
+    if request.session.get("user_id"):
+        return RedirectResponse('/logout')
+    
     db.execute("SELECT id, hashed_password, salt FROM users WHERE username = ?", (username,))
     user = db.fetchone()
     
@@ -60,6 +62,8 @@ async def login(username: Annotated[str, Form()], password: Annotated[str, Form(
 
 @app.get("/login")
 def get_login(request: Request):
+    if request.session.get("user_id"):
+        return RedirectResponse('/logout')
     return templates.TemplateResponse(
         "login.html", 
         {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
