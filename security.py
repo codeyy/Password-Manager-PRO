@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives import hashes
 from base64 import urlsafe_b64encode
 from cryptography.fernet import Fernet
 
-DEFAULT_ITERATIONS = 200_000
+DEFAULT_ITERATIONS = 600_000
 SALT_SIZE = 16
 
 def gen_salt():
@@ -15,7 +15,7 @@ def derive_key(master_password: str, salt: bytes, iterations: int = DEFAULT_ITER
     password_bytes = master_password.encode('utf-8')
     """Derive a secure key from the given password and salt."""
     kdf = PBKDF2HMAC(
-        algorithm = hashes.SHA256(),
+        algorithm = hashes.SHA512(),
         length = 32,
         salt = salt,
         iterations = DEFAULT_ITERATIONS,
