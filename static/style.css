@@ -22,6 +22,18 @@ body {
     z-index: 0;
 }
 
+.facyErrorSnowflake {
+    position: fixed;
+    top: -5%;
+    color: rgb(255, 0, 0);
+    font-size: 10px;
+    animation: fallasfancyerror linear infinite;
+    user-select: none;
+    z-index: 0;
+    font-family: 'Poppins';
+}
+
+
 @keyframes fall {
     0% {
         transform: translateY(0) rotate(0deg);
@@ -29,8 +41,21 @@ body {
     }
 
     100% {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0.2;
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0.5;
+    }
+}
+@keyframes fallasfancyerror {
+    0% {
+        transform: translateY(0) rotate(-30deg);
+        opacity: 1;
+        text-shadow: #5502ee;
+    }
+
+    100% {
+        transform: translateY(110vh) rotate(30deg);
+        opacity: 0.9;
+        text-shadow: red;
     }
 }
 
@@ -131,10 +156,8 @@ body {
 
 .toggle-password {
     font-size: 15px;
-    position: absolute;
+    position: fixed;
     right: 42px;
-    /* spacing from right edge */
-    transform: translateY(-50%);
     cursor: pointer;
     color: #777;
     user-select: none;
@@ -162,6 +185,7 @@ body {
 
 .top-buttons {
     margin-right: 18px;
+    margin-bottom: 0px;
     border-radius: 7.5px;
     outline: none;
     border: none;
@@ -193,7 +217,7 @@ body {
     box-shadow: 0 3px 8px rgba(201, 199, 199, 0.46);
     border-radius: 7.5px;
     z-index: 3;
-    margin-top: 5px;
+    margin-top: 0px;
 }
 
 .dropdown-content a {
@@ -202,7 +226,7 @@ body {
     text-decoration: none;
     display: block;
     font-family: 'Poppins';
-    transition: background-color 0.2s ease;
+    transition: background-color 0.5s ease;
 }
 
 .dropdown-content a:hover {
@@ -281,13 +305,9 @@ th {
 
 .Pass_form {
     position: fixed;
-    /* 👈 stays in place relative to viewport */
     top: 40%;
-    /* move vertically */
     right: 25vw;
-    /* distance from right edge */
     transform: translateY(-50%);
-    /* perfectly vertical center */
     max-width: 90vw;
     background: transparent;
     padding: 2rem;
@@ -340,11 +360,18 @@ th {
 }
 
 .hints{
-    color: rgba(255, 97, 97, 0.627);
+    margin-left: 100px;
+    width: 300px;
+    height: 150px;
+    color: #5502ee;
     font-size: 13px;
     font-weight: bold;
     text-align: center;
     font-family: 'Poppins';
+    display: grid;
+  place-content: center; /* Centers both horizontally and vertically */
+  margin: 50px;
+  margin-left: 600px;
 }
 .ttttttttttt{
     color: rgba(18, 81, 255, 0.627);
@@ -353,6 +380,21 @@ th {
     text-align: center;
     font-family: 'Poppins';
 }
+.progress-container {
+  width: 100%;
+  background-color: #fdf6f610; /* Color of the empty bar */
+  border-radius: 10px;
+  overflow: hidden; /* Ensures the inner bar stays rounded at corners */
+  height: 30px; /* Height of the container */
+}
+
+.progress-bar {
+  height: 100%;
+  text-align: center;
+  line-height: 30px; /* Centers the text vertically */
+  transition: width 0.5s ease; /* Smooth animation when width changes */
+}
+
 
 .update_msg{
     color: rgb(255, 0, 0);
@@ -391,6 +433,29 @@ th {
     animation: shimmer 2s infinite;
 }
 
+progress {
+  /* Set the overall size */
+  /* Change the default background color of the unfilled bar */
+  background-color: transparent;
+  /* Add a border or other styles */
+  border: 2px solid #141414bd;
+  border-radius: 10px;
+}
+
+/* Note: Styling the filled portion consistently is challenging across browsers. */
+/* Webkit browsers (Chrome, Safari, Edge, Opera) */
+progress::-webkit-progress-value {
+  background-color: #4caf50; /* Green fill color */
+  border-radius: 5px;
+}
+
+/* Firefox */
+progress::-moz-progress-bar {
+  background-color: #4caf50; /* Green fill color */
+  border-radius: 5px;
+}
+
+
 @keyframes shimmer {
     0% {
         background-position: 200% 0;
@@ -398,4 +463,28 @@ th {
     100% {
         background-position: -200% 0;
     }
+}
+
+.reg_hints{
+    color: rgba(255, 97, 97, 0.627);
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Poppins';
+}
+
+.glassmorficpopup{
+    position: fixed; top: 50%; left: 50%;
+    color: rgba(230, 230, 230, 0.5);
+    transform: translate(-50%, -50%);
+    padding: 20px;
+
+    z-index: 10000;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: opacity 100ms ease-in-out;
 }
