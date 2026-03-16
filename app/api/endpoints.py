@@ -1,33 +1,35 @@
 import os
 import sqlite3
 import asyncio
+from pathlib import Path
 from typing import Annotated
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from utils import strength, retime, hasher, verify
-from fastapi import FastAPI, Request, status, Form
-from starlette.middleware.sessions import SessionMiddleware
-from security import gen_salt, derive_key, encrypt_data, decrypt_data
+from fastapi import FastAPI, Request, status, Form, APIRouter
+from app.services.strength_eval import strength, retime, hasher, verify
 from werkzeug.security import generate_password_hash, check_password_hash
 from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
+from app.core.security import gen_salt, derive_key, encrypt_data, decrypt_data
 
 
-conn = sqlite3.connect('passvault.db', check_same_thread=False)
+router = APIRouter()
+templates = Jinja2Templates(directory="../templates")
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+TEMPLATES = os.path.join(BASE_DIR, "app\\templates")
+CSS = os.path.join(BASE_DIR, "app\\static\\css")
+DATABASE = os.path.join(BASE_DIR, "passvault.db")
+
+router.mount("/static", StaticFiles(directory=CSS), name="static")
+
+templates = Jinja2Templates(directory=TEMPLATES)
+
+conn = sqlite3.connect(DATABASE, check_same_thread=False)
 db = conn.cursor()
 
-app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=os.urandom(24),
-    https_only=False,
-    max_age= 14400
-)
-
-
-@app.get("/")
+@router.get("/")
 def home(request: Request):
     if not request.session.get("user_id"):
         return RedirectResponse('/login')
@@ -43,7 +45,7 @@ def home(request: Request):
     )
 
 
-@app.post("/login")
+@router.post("/login")
 async def login(username: Annotated[str, Form()], password: Annotated[str, Form()], request: Request):
     if request.session.get("user_id"):
         return RedirectResponse('/logout')
@@ -60,7 +62,7 @@ async def login(username: Annotated[str, Form()], password: Annotated[str, Form(
         {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P" , "error": "Invalid Credentials"}
     )
 
-@app.get("/login")
+@router.get("/login")
 def get_login(request: Request):
     if request.session.get("user_id"):
         return RedirectResponse('/logout')
@@ -69,12 +71,12 @@ def get_login(request: Request):
         {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
     )
 
-@app.get("/logout")
+@router.get("/logout")
 def logout(request: Request):
     request.session.clear()
     return RedirectResponse('/')
 
-@app.post("/register")
+@router.post("/register")
 async def register(username: Annotated[str, Form()], password: Annotated[str, Form()]):
     #form_data = await request.form()
     #username = form_data.get("username")
@@ -94,7 +96,7 @@ async def register(username: Annotated[str, Form()], password: Annotated[str, Fo
 
     return RedirectResponse('/login', status_code=status.HTTP_303_SEE_OTHER)
 
-@app.post("/api/checkUsername")
+@router.post("/api/checkUsername")
 async def checkUsername(request: Request):
     json_data = await request.json()
     username = json_data.get("username")
@@ -104,7 +106,7 @@ async def checkUsername(request: Request):
     return JSONResponse(content={"status": False})
 
 
-@app.get("/register")
+@router.get("/register")
 def get_register(request: Request):
     return templates.TemplateResponse(
         "register.html", 
@@ -113,7 +115,7 @@ def get_register(request: Request):
     
 
 
-@app.api_route('/add-password', methods=['GET', 'POST'])
+@router.api_route('/add-password', methods=['GET', 'POST'])
 async def add_password(request: Request):
     if not request.session.get("user_id", None):
         return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
@@ -152,7 +154,7 @@ async def add_password(request: Request):
     )
 
 
-@app.post('/del-password')
+@router.post('/del-password')
 async def delete_password(request: Request):
     user_id = request.session.get("user_id")
     if not user_id:
@@ -186,7 +188,7 @@ async def delete_password(request: Request):
         
     return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
         
-@app.get('/del-password')
+@router.get('/del-password')
 def get_del_password(request: Request):
     return templates.TemplateResponse(
                         "del_password.html", 
@@ -195,7 +197,7 @@ def get_del_password(request: Request):
 
 
 
-@app.api_route('/passwords', methods=['GET', 'POST'])
+@router.api_route('/passwords', methods=['GET', 'POST'])
 async def passwords(request: Request):
     if not request.session.get("user_id", None):
         return templates.TemplateResponse(
@@ -239,7 +241,7 @@ async def passwords(request: Request):
     )
 
 
-@app.post('/api/passwords_strength')
+@router.post('/api/passwords_strength')
 async def password_strength(request: Request):
     json_data = await request.json()
     
@@ -267,14 +269,14 @@ async def password_strength(request: Request):
                                  "colour"    : colour
                                  })
 
-@app.get("/passwords_strength")
+@router.get("/passwords_strength")
 def get_password_strength(request: Request):
     return templates.TemplateResponse(
                         "password_strength.html", 
                         {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
                     )
 
-@app.post('/hash_password')
+@router.post('/hash_password')
 async def hash_passwords(request: Request):
     form_data = await request.form()
     
@@ -286,7 +288,7 @@ async def hash_passwords(request: Request):
                             "hash_password.html", 
                             {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "eval": stren},
                         )
-@app.get("/hash_password")
+@router.get("/hash_password")
 def get_hash_passwords(request: Request):
     return templates.TemplateResponse(
                         "hash_password.html", 
@@ -294,7 +296,7 @@ def get_hash_passwords(request: Request):
                     )
 
 
-@app.post('/verifyHash')
+@router.post('/verifyHash')
 async def verifyHash(request: Request):
     form_data = await request.form()
     
@@ -314,7 +316,7 @@ async def verifyHash(request: Request):
                             "verify_hash.html", 
                             {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "eval": e},
                         )
-@app.get("/verifyHash")
+@router.get("/verifyHash")
 def get_verifyHash(request: Request):
     return templates.TemplateResponse(
                         "verify_hash.html", 
@@ -322,31 +324,3 @@ def get_verifyHash(request: Request):
                     )
 
 
-
-
-
-
-
-#@app.exception_handler(404)
-#def page_not_found(request: Request):
-#    return templates.TemplateResponse('error.html',
-#    {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
-#    error="404- Not Found",
-#    ), 404
-#@app.exception_handler(500)
-#def internal_server_error(request: Request):
-#    return templates.TemplateResponse('error.html', 
-#    {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
-#    error="500- Internal Server Error",
-#    ), 500
-#@app.exception_handler(Exception)
-#def handle_exception(e, request: Request):
-#    return templates.TemplateResponse('error.html', 
-#    {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
-#    error="-An error occurred: " + str(e),
-#    ), 500
-#
-
-
-if __name__ == '__main__':
-    os.system("uvicorn main:app --reload")

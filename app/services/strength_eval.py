@@ -1,26 +1,56 @@
 
 def strength(password):
+    common_passwords = [
+    "Password123!",
+    "P@ssw0rd123",
+    "P@ssw0rd1234",
+    "P@ssw0rd12345",
+    "P@ssw0rd123456",
+    "Aa123456!",
+    "Welcome123!",
+    "Admin@123",
+    "Summer2025!",
+    "Spring2025!",
+    "Winter2025!",
+    "Fall2024!",
+    "Qwerty123!",
+    "Monkey123!",
+    "Dragon123!",
+    "Iloveyou1!",
+    "Letmein123!",
+    "Pass@123",
+    "Aa@123456",
+    "Changeme1!",
+    "Password01!",
+    "Abc@12345",
+    "Admin123!",
+    "Abc123Abc123!",
+    "123!123!",
+    "PasswordPassword",
+    "AdminAdmin123",
+    "Testing123!",
+    "1122334455!!",
+    "Login1234!",
+    "Aaaaaa1!",
+    "Pppasword123",
+    "User12345678"
+]
     entropy = 0
-
-    import json
-    data = 0
-    with open("top30.json", 'r') as f:
-        data = json.load(f)
+    est_time = 0
+    data = common_passwords
 
     if password in data:
-        entropy = data.index(password)
+        return (entropy, est_time)
     else:
         char_set = sum(find_charset_size(password))
 
         from math import log2
         entropy = round(log2(char_set ** len(password)), 2)
 
-    est_time = 0
     try:
-        est_time = ((((2 ** entropy) / (10**11)))) 
+        est_time = ((2 ** entropy) / (10**11))
     except OverflowError:
         est_time = "infinity"
-    
 
     return (entropy, est_time)
 
