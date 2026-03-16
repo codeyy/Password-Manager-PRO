@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+{% block main %}
+
+<nav>
+    <span></span>
+    <a href="/" class="top-buttons" style="text-decoration: none; float: right; margin-right: 6vw">home</a>
+</nav>
+
+<form action="/verifyHash" method="post" class="reg_form">
+    <div style="display: flex; justify-content: flex-end; width:fit-content">
+    <input type="password" placeholder="Password" id="check_password" name="password"
+    required class="form-input" autocomplete="off"
+    title="Enter passwords">
+    
+    <span id="toggle_Password" class="toggle-password" style="top: 14%;">Show</span>
+</div>
+<br><br>
+<input type="hash" placeholder="Hash" id="hash" name="hash"
+required class="form-input" autocomplete="off"
+title="Enter hash to verify">
+<input type="hidden" id="hiddenInputField">
+<br><br>
+<div class="form-input, dropdown" style="width: 10px;">
+    <button class="top-buttons" id="dash-menu">Menu</button>
+    <div class="dropdown-content" id="dropdown">
+        <a id="opt1" > SHA-224</a>
+        <a id="opt2" > SHA-256</a>
+        <a id="opt3" > SHA-384</a>
+        <a id="opt4" > SHA-512</a>
+    </div>
+</div>
+<!--
+    <input type="text" placeholder="Algorithm" id="algorithm" name="algorithm"
+        required class="form-input" autocomplete="off"
+        title="Enter algorithm used to create hash
+                SHA-224
+                SHA-256
+                SHA-384
+                SHA-512">
+                <form>-->
+    <br><br>                
+    <input type="submit" value="Verify" class="form-input, form-button" id="submitButton">
+</form>
+    <br><br>
+    {% if eval %}
+    {% if eval == "Matched"%}
+    <p style="color:rgb(0, 255, 200)">
+        {{eval}}
+    </p>
+    {% else %}
+    <p style="color:rgb(255, 0, 0)">
+        {{eval}}
+    </p>
+    {% endif %}
+    {% endif %}
+</form>
+    <script>
+        const passwordInput = document.getElementById('check_password');
+        const toggleButton = document.getElementById('toggle_Password');
+    
+        toggleButton.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'Show' : 'Hide';
+        });
+    </script>
+
+
+<script>
+    const passwordInputField    = document.querySelector('#check_password');
+    const hashInputField        = document.querySelector('#hash');
+    const algoInputField        = document.querySelector('#algorithm');
+    const submitButton          = document.querySelector('#submitButton');
+
+    submitButton.addEventListener('click', function (event) {
+        if (passwordInputField.value.trim() === '') {
+            event.preventDefault();
+            passwordInputField.style.border = '1px solid red';
+        }
+        if (hashInputField.value.trim() === '') {
+            event.preventDefault();
+            hashInputField.style.border = '1px solid red';
+        }
+        if (algoInputField.value.trim() === '') {
+            event.preventDefault();
+            algoInputField.style.border = '1px solid red';
+        }
+    });
+</script>
+
+<script>
+    const hiddenInputField = document.getElementById("hiddenInputField");
+    const dash_menu = document.getElementById("dash-menu");
+    const opt1 = document.getElementById("otp1");
+    const opt2 = document.getElementById("otp2");
+    const opt3 = document.getElementById("otp3");
+    const opt4 = document.getElementById("otp4");
+
+    opt1.addEventListener('click', function() {
+        hiddenInputField.value = opt1.textContent
+        dash_menu.textContent = opt1.textContent
+    })
+    opt2.addEventListener('click', function() {
+        hiddenInputField.value = opt2.textContent
+        dash_menu.textContent = opt2.textContent
+    })
+    opt3.addEventListener('click', function() {
+        hiddenInputField.value = opt3.textContent
+        dash_menu.textContent = opt3.textContent
+    })
+    opt4.addEventListener('click', function() {
+        hiddenInputField.value = opt4.textContent
+        dash_menu.textContent = opt4.textContent
+    })
+</script>
+
+{% endblock %}
