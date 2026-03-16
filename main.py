@@ -261,7 +261,6 @@ async def password_strength(request: Request):
     colour = round(
         (((score-1)/99)*256)
     )
-    print(colour)
     return JSONResponse(content={"entropy"   : entropy,
                                  "time_score": min(score, 100),
                                  "est_time"  : time_score[0],
@@ -302,6 +301,12 @@ async def verifyHash(request: Request):
     password = form_data.get("password")
     phash = form_data.get("hash")
     algo = form_data.get("algorithm")
+
+    if algo not in ["SHA-224", "SHA-256", "SHA-384", "SHA-512"]:
+        return templates.TemplateResponse(
+                            "verify_hash.html", 
+                            {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P", "eval": "Invalid Algorithm"},
+                        )
 
     stren = verify(phash, password, algo)
     e = "Matched" if stren else "Not Matched"
