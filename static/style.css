@@ -516,6 +516,21 @@ progress::-moz-progress-bar {
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     transition: opacity 100ms ease-in-out;
 }
+.glassmorphicHints{
+    position: fixed; top: 20%; left: 35%;
+    color: #5900ff;
+    font-weight:  bolder;
+    padding: 20px;
+
+    z-index: 10000;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: opacity 100ms ease-in-out;
+}
 
 .page-header {
   display: flex;
