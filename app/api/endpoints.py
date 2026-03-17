@@ -1,16 +1,22 @@
 import os
-import sqlite3
 import asyncio
 from pathlib import Path
 from typing import Annotated
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi import FastAPI, Request, status, Form, APIRouter
+from fastapi import Request, status, Form, APIRouter, Depends
+from sqlalchemy import and_, delete
 from app.services.strength_eval import strength, retime, hasher, verify
 from werkzeug.security import generate_password_hash, check_password_hash
 from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
 from app.core.security import gen_salt, derive_key, encrypt_data, decrypt_data
+from sqlalchemy.orm import Session
+from app.models.database import get_db
+from app.models.passwords import PasswordEntry
+from app.models.users import User
+from dotenv import load_dotenv
+load_dotenv()
 
 
 router = APIRouter()
@@ -26,16 +32,18 @@ router.mount("/static", StaticFiles(directory=CSS), name="static")
 
 templates = Jinja2Templates(directory=TEMPLATES)
 
-conn = sqlite3.connect(DATABASE, check_same_thread=False)
-db = conn.cursor()
+#conn = sqlite3.connect(DATABASE, check_same_thread=False)
+#db = conn.cursor()
+
 
 @router.get("/")
-def home(request: Request):
+def home(request: Request, db: Session = Depends(get_db)):
     if not request.session.get("user_id"):
         return RedirectResponse('/login')
 
-    entry = db.execute("SELECT service, username, category FROM passwords WHERE user_id = ?",(request.session['user_id'],))
-    entries = entry.fetchall()
+    #entry = db.execute("SELECT service, username, category FROM passwords WHERE user_id = ?",(request.session['user_id'],))
+    #entries = entry.fetchall()
+    entries = db.query(PasswordEntry.service, PasswordEntry.username, PasswordEntry.category).filter(PasswordEntry.user_id == request.session['user_id']).all()
     if not entries:
         entries = None
 
@@ -46,13 +54,12 @@ def home(request: Request):
 
 
 @router.post("/login")
-async def login(username: Annotated[str, Form()], password: Annotated[str, Form()], request: Request):
+async def login(username: Annotated[str, Form()], password: Annotated[str, Form()], request: Request, db: Session = Depends(get_db)):
     if request.session.get("user_id"):
         return RedirectResponse('/logout')
-    
-    db.execute("SELECT id, hashed_password, salt FROM users WHERE username = ?", (username,))
-    user = db.fetchone()
-    
+
+    user = db.query(User.id, User.hashed_password, User.salt).filter(User.username == username).all()[0]
+
     if user and check_password_hash(user[1], password):
         request.session["user_id"] = user[0]
         return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
@@ -71,38 +78,35 @@ def get_login(request: Request):
         {"request": request, "title": "Password_Manager_Pro", "name": "P-M-P"},
     )
 
-@router.get("/logout")
+@router.api_route('/logout', methods=['GET', 'POST'])
 def logout(request: Request):
     request.session.clear()
     return RedirectResponse('/')
 
 @router.post("/register")
-async def register(username: Annotated[str, Form()], password: Annotated[str, Form()]):
-    #form_data = await request.form()
-    #username = form_data.get("username")
-    #password = form_data.get("password")
+async def register(username: Annotated[str, Form()], password: Annotated[str, Form()], db: Session = Depends(get_db)):
 
-    # Check if username already exists
-    db.execute("SELECT id FROM users WHERE username = ?", (username,))
-    if db.fetchone():
+    if db.query(User.id).filter(User.username == username):
         return RedirectResponse('/', status_code=status.HTTP_303_SEE_OTHER)
     
-    hashed_password = generate_password_hash(password)
-    salt = gen_salt()
-
-    # Save username and hashed_password to database
-    db.execute("INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)", (username, hashed_password, salt))
-    conn.commit()
+    new_user = User(
+        username=username,
+        hashed_password=generate_password_hash(password),
+        salt=gen_salt()
+    )
+    db.add(new_user)
+    db.commit()
 
     return RedirectResponse('/login', status_code=status.HTTP_303_SEE_OTHER)
 
 @router.post("/api/checkUsername")
-async def checkUsername(request: Request):
+async def checkUsername(request: Request, db: Session = Depends(get_db)):
     json_data = await request.json()
-    username = json_data.get("username")
-    db.execute("SELECT id FROM users WHERE username = ?", (username,))
-    if db.fetchone():
+    x = db.query(User.id).filter(User.username == json_data.get("username")).all()
+    if x != []:
+        print(True)
         return JSONResponse(content={"status": True})
+    print(False)
     return JSONResponse(content={"status": False})
 
 
@@ -114,9 +118,8 @@ def get_register(request: Request):
     )
     
 
-
 @router.api_route('/add-password', methods=['GET', 'POST'])
-async def add_password(request: Request):
+async def add_password(request: Request, db: Session = Depends(get_db)):
     if not request.session.get("user_id", None):
         return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     if request.method == 'POST':
@@ -128,20 +131,30 @@ async def add_password(request: Request):
         category = form_data.get('category').upper()
 
         master_password = form_data.get('master_password')
-        db.execute("SELECT username, hashed_password, salt FROM users WHERE id = ?", (request.session['user_id'],))
-        user = db.fetchone()
+        #db.execute("SELECT username, hashed_password, salt FROM users WHERE id = ?", (request.session['user_id'],))
+        #user = db.fetchone()
+        user = db.query(User.username, User.hashed_password, User.salt).filter(User.id == (request.session['user_id'])).all()[0]
         salt = user[2]
-        check = db.execute("SELECT service, username FROM passwords WHERE service = ? AND username = ?", (service, username))
-        if check.fetchone() :
+        #check = db.execute("SELECT service, username FROM passwords WHERE service = ? AND username = ?", (service, username))
+        check = db.query(PasswordEntry.username).filter(PasswordEntry.username == username).all()
+        if check != []:
             print("Username already exists!")
             return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
         if user and check_password_hash(user[1], master_password):
-
-            # encrypt the password before saving
             encrypted_password = encrypt_data(derive_key(master_password,salt), password)
-            db.execute("INSERT INTO passwords (user_id, service, username, password_encrypted, category) VALUES (?, ?, ?, ?, ?)",
-                       (request.session['user_id'], service, username, encrypted_password, category))
-            conn.commit()
+            new_password = PasswordEntry(
+                user_id = request.session['user_id'],
+                service = service,
+                username = username,
+                password_encrypted = encrypted_password,
+                category = category
+            )
+            # encrypts the password before saving
+            #db.execute("INSERT INTO passwords (user_id, service, username, password_encrypted, category) VALUES (?, ?, ?, ?, ?)",
+            #           (request.session['user_id'], service, username, encrypted_password, category))
+            #conn.commit()
+            db.add(new_password)
+            db.commit()
 
             return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
         else:
@@ -155,7 +168,7 @@ async def add_password(request: Request):
 
 
 @router.post('/del-password')
-async def delete_password(request: Request):
+async def delete_password(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         
@@ -169,23 +182,40 @@ async def delete_password(request: Request):
     
     master_password = form_data.get("master_password")
     
-    db.execute("SELECT username, hashed_password FROM users WHERE id = ?", (request.session['user_id'],))
-    
-    user = db.fetchone()
+    #db.execute("SELECT username, hashed_password FROM users WHERE id = ?", (request.session['user_id'],))
+    #user = db.fetchone()
+
+    user = db.query(User.username, User.hashed_password).filter(User.id == request.session['user_id']).first()
     
     if not user or not check_password_hash(user[1], master_password):
         
         return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     
-    check = db.execute("SELECT service, username FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
-    
-    if not check.fetchone():
-        
+    #check = db.execute("SELECT service, username FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
+    user = db.query(PasswordEntry.service, PasswordEntry.username).filter(
+        and_(
+            PasswordEntry.user_id == request.session['user_id'],
+            PasswordEntry.service == service,
+            PasswordEntry.username == username
+        )
+    ).first()
+    if not user:
         return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    print(user)
     
-    db.execute("DELETE FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
-    conn.commit()
-        
+    #db.execute("DELETE FROM passwords WHERE user_id = ? AND service = ? AND username = ?", (request.session['user_id'], service, username))
+    #conn.commit()
+    
+    stmt = delete(PasswordEntry).where(
+        and_(
+            PasswordEntry.user_id == request.session['user_id'],
+            PasswordEntry.service == service,
+            PasswordEntry.username == username
+        )
+    )
+    db.execute(stmt)
+    db.commit()
+
     return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
         
 @router.get('/del-password')
@@ -198,7 +228,7 @@ def get_del_password(request: Request):
 
 
 @router.api_route('/passwords', methods=['GET', 'POST'])
-async def passwords(request: Request):
+async def passwords(request: Request, db: Session = Depends(get_db)):
     if not request.session.get("user_id", None):
         return templates.TemplateResponse(
         "error.html", 
@@ -209,13 +239,16 @@ async def passwords(request: Request):
    
         password = form_data.get("password")
 
-        db.execute("SELECT username, hashed_password FROM users WHERE id = ?", (request.session['user_id'],))
-        user = db.fetchone()
+        #db.execute("SELECT username, hashed_password FROM users WHERE id = ?", (request.session['user_id'],))
+        #user = db.fetchone()
+        user = db.query(User.username, User.hashed_password).filter(User.id == request.session['user_id']).first()
         username = user[0]
         if user and check_password_hash(user[1], password):
-            salt = db.execute("SELECT salt FROM users WHERE username = ?", (username,)).fetchone()[0]
-            entry = db.execute("SELECT service, username, password_encrypted, category, updated_at FROM passwords WHERE user_id = ?", (request.session['user_id'],))
-            entries = entry.fetchall()
+            #salt = db.execute("SELECT salt FROM users WHERE username = ?", (username,)).fetchone()[0]
+            #entry = db.execute("SELECT service, username, password_encrypted, category, updated_at FROM passwords WHERE user_id = ?", (request.session['user_id'],))
+            salt = db.query(User.salt).filter(User.username == username).first()
+            entries = db.query(PasswordEntry.service, PasswordEntry.username, PasswordEntry.password_encrypted, PasswordEntry.category, PasswordEntry.updated_at).filter(User.id == request.session['user_id']).all()
+            
             decrypted_entries = []
             for e in entries:
                 decrypted_password = decrypt_data(derive_key(password,salt), e[2])
@@ -232,8 +265,9 @@ async def passwords(request: Request):
             return RedirectResponse('/logout')
 
     elif request.method == 'GET':
-        entry = db.execute("SELECT service, username, password_encrypted, category, updated_at FROM passwords WHERE user_id = ?", (request.session['user_id'],))
-        entries = entry.fetchall()
+        #entry = db.execute("SELECT service, username, password_encrypted, category, updated_at FROM passwords WHERE user_id = ?", (request.session['user_id'],))
+        entries = db.query(PasswordEntry.service, PasswordEntry.username, PasswordEntry.password_encrypted, PasswordEntry.category, PasswordEntry.updated_at).filter(User.id == request.session['user_id']).all()
+
         raw_entries = [(e[0], e[1], "********", e[3], e[4]) for e in entries]
         return templates.TemplateResponse(
         "passwords.html", 

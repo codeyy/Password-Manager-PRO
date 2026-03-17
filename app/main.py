@@ -3,6 +3,8 @@ from fastapi import FastAPI
 from app.api.endpoints import router
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
+from dotenv import load_dotenv
+load_dotenv()
 
 app = FastAPI()
 
@@ -12,7 +14,7 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=os.urandom(24),
     https_only=False,
-    max_age= 14400
+    #max_age= 14400
 )
 # Include the routes we defined in endpoints.py
 app.include_router(router)
