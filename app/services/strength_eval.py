@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 
 def strength(password):
     common_passwords = [
@@ -34,7 +36,10 @@ def strength(password):
     "Aaaaaa1!",
     "Pppasword123",
     "User12345678"
+    "112233445566778899"
+    "54321"
 ]
+    
     entropy = 0
     est_time = 0
     data = common_passwords
