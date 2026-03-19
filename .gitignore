@@ -1,6 +1,4 @@
-database/passvault.db
 __pycache__
 .venv
 .env
-database/passvault.db
 *.db
