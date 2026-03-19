@@ -4,17 +4,17 @@
 <div id="glow"></div>
 <div>
     <nav>
-        <span><a href="/"><img width="50" src="/static/favicon.png" alt="logo"></span></a>
+        <span><a href="/"><img width="50" src="../static/images/favicon.png" alt="logo"></span></a>
         <div>
             <a href="/passwords" method="GET"><button class="top-buttons" id="dash-passwords">My Passwords</button></a>
             <div class="dropdown">
                 <button class="top-buttons" id="dash-menu">Menu</button>
                 <div class="dropdown-content" id="dropdown">
-                    <a href="/add-password">Add Password</a>
-                    <a href="/del-password">Delete Password</a>
-                    <a href="/passwords_strength">Check Password Strength</a>
-                    <a href="/hash_password">Hash Password</a>
-                    <a href="/verifyHash">Verify Hash</a>
+                    <a href="/add-password" class="dropdownOptions">Add Password</a>
+                    <a href="/del-password" class="dropdownOptions">Delete Password</a>
+                    <a href="/passwords_strength" class="dropdownOptions">Check Password Strength</a>
+                    <a href="/hash_password" class="dropdownOptions">Hash Password</a>
+                    <a href="/verifyHash" class="dropdownOptions">Verify Hash</a>
                 </div>
             </div>
             <a href="/logout" method="GET"><button class="top-buttons" id="home">Logout</button></a>
@@ -25,7 +25,7 @@
         {% if entries %}
     <table class="table">
         <tr>
-            <th colspan="3" style="position: relative; border-bottom: 3px solid rgba(220, 220, 220, 0.433); font-size: 15px">
+            <th colspan="3" style="position: relative; border-bottom: 3px solid rgba(220, 220, 220, 0.433); font-size: 15px;z-index: 0;">
                 <b>
                     <pre>S   A   V   E   S</pre>
                 </b>
@@ -61,23 +61,5 @@
     {% endif %}
 
 </div>
-<script>
-    let hoverTimeout;
-    const element = document.querySelector('.dropdown-content');
-    const delay = Math.random() * 300 + 200; // Delay between 200ms - 500ms
-
-    // Mouse Enter: Cancel any pending hide actions
-    element.addEventListener('mouseenter', () => {
-        clearTimeout(hoverTimeout);
-        console.log('Mouse in - show content');
-    });
-
-    // Mouse Leave: Start timer to hide content
-    element.addEventListener('mouseleave', () => {
-        hoverTimeout = setTimeout(() => {
-            console.log('Mouse out - hide content');
-        }, delay);
-    });
-</script>
 
 {% endblock %}
