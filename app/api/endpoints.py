@@ -58,7 +58,8 @@ async def login(username: Annotated[str, Form()], password: Annotated[str, Form(
     if request.session.get("user_id"):
         return RedirectResponse('/logout')
 
-    user = db.query(User.id, User.hashed_password, User.salt).filter(User.username == username).all()[0]
+    user = db.query(User.id, User.hashed_password, User.salt).filter(User.username == username).first()
+    print(user)
 
     if user and check_password_hash(user[1], password):
         request.session["user_id"] = user[0]
@@ -86,7 +87,7 @@ def logout(request: Request):
 @router.post("/register")
 async def register(username: Annotated[str, Form()], password: Annotated[str, Form()], db: Session = Depends(get_db)):
 
-    if db.query(User.id).filter(User.username == username):
+    if db.query(User.id).filter(User.username == username).first():
         return RedirectResponse('/', status_code=status.HTTP_303_SEE_OTHER)
     
     new_user = User(
@@ -285,13 +286,13 @@ async def password_strength(request: Request):
     entropy = stren[0]
     time_score = retime(stren[1])
 
-    spicer = 0 #spicer is solely to make progress bar feel more alive without unnecessarily increasing the complexity of program
+    spcr = 0 
     if time_score[1] >= 1:
-        import random
-        spicer = random.uniform(0, 1)
-        #spicer = float(f"0.{str(int(entropy))}") #untag it incase unpredictability bicomes an issue;
+        #import random
+        #spcr = random.uniform(0, 1)
+        spcr = float(f"0.{str(int(entropy))}") #untag it incase unpredictability bicomes an issue;
 
-    score = round(((time_score[1]*10) + spicer), 2)
+    score = round(((time_score[1]*10) + spcr), 2)
 
     
     colour = round(
