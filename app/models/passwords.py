@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, LargeBinary, ForeignKey, TIMESTAMP, text
 from sqlalchemy.orm import relationship
 from .database import Base
-from dotenv import load_dotenv
-load_dotenv()
 
 class PasswordEntry(Base):
     __tablename__ = "passwords"
