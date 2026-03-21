@@ -1,0 +1,196 @@
+//layout
+  const glow = document.getElementById('glow');
+
+  document.addEventListener('mousemove', (e) => {
+    glow.style.top = e.clientY + 'px';
+    glow.style.left = e.clientX + 'px';
+  });
+  const snowCount = 60; // Number of snowflakes
+  for (let i = 0; i < snowCount; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.textContent = String.fromCharCode(Math.random() * 100); // Snowflake character
+    snowflake.style.left = Math.random() * 100 + "vw";
+    snowflake.style.zIndex = Math.floor(Math.random() - 1);
+    snowflake.style.animationDuration = 10 + Math.random() * 10 + "s";
+    snowflake.style.fontSize = 8 + Math.random() * 10 + "px";
+    snowflake.style.animationDelay = Math.random() *10 + "s";
+    snowflake.style.color = `rgba(0, ${Math.random() * 240}, 255, 0.733)`;
+    snowflake.style.opacity = 0.6;
+    snowflake.style.zIndex = 1;
+    document.body.appendChild(snowflake);
+  }
+  for (let i = 0; i < snowCount; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.textContent = String.fromCharCode(Math.random() * 100); // Snowflake character
+    snowflake.style.left = Math.random() * 100 + "vw";
+    snowflake.style.zIndex = Math.floor(Math.random() - 1);
+    snowflake.style.animationDuration = 10 + Math.random() * 10 + "s";
+    snowflake.style.fontSize = 7 + Math.random() * 10 + "px";
+    snowflake.style.animationDelay = Math.random() * 10 + "s";
+    snowflake.style.color = `rgba(${Math.random() * 90}, 0, 255, 0.733)`;
+    snowflake.style.opacity = 0.5;
+    snowflake.style.zIndex = 1;
+    document.body.appendChild(snowflake);
+  }
+  
+  document.addEventListener('keydown', function(event) {
+    // Check if Ctrl key is pressed
+    const isCtrlPressed = event.ctrlKey || event.metaKey;
+
+    // Check if Shift key is pressed
+    const isShiftPressed = event.shiftKey;
+
+    if (isCtrlPressed  && (event.key === 'h' || event.key === 'H')) {
+        event.preventDefault();
+        window.location.href = "/"
+    }
+    if (isCtrlPressed && isShiftPressed && event.key === ' ') {
+        event.preventDefault(); 
+        window.location.href = "/logout"
+    }
+    if (isCtrlPressed && (event.key === 'q' || event.key === 'Q')) {
+        event.preventDefault(); 
+        window.location.href = "/add-password"
+    }
+    if (isCtrlPressed && (event.key === 'a' || event.key === 'A')) {
+        event.preventDefault(); 
+        window.location.href = "/del-password"
+    }
+    if (isCtrlPressed && (event.key === 'z' || event.key === 'Z')) {
+        event.preventDefault(); 
+        window.location.href = "/passwords_strength"
+    }
+    if (isCtrlPressed && (event.key === 'x' || event.key === 'X')) {
+        event.preventDefault(); 
+        window.location.href = "/hash_password"
+    }
+    if (isCtrlPressed && (event.key === 'd' || event.key === 'D')) {
+        event.preventDefault(); 
+        window.location.href = "/verifyHash"
+    }
+    if (isCtrlPressed  && (event.key === 's' || event.key === 'S')) {
+        event.preventDefault(); 
+        window.location.href = "/passwords"
+    }
+    if ((event.ctrlKey || event.metaKey) && (event.key === '?' || event.key === '/')) {
+        event.preventDefault();
+        showInstructionPopup();
+    }
+});
+  document.getElementById("helper_key").addEventListener('click', function(event) {
+    showInstructionPopup()
+});
+
+function showInstructionPopup() {
+    // Check if popup already exists, remove it
+    if (document.getElementById('help-popup')) {
+        document.getElementById('help-popup').remove();
+        return;
+    }
+
+    // Create the popup container
+    const popup = document.createElement('div');
+    popup.id = 'help-popup';
+    popup.classList.add('glassmorphicpopup')
+
+    // Populate with instructions
+    
+    popup.innerHTML = `<h1>Help</h1>
+
+<p>
+This application is a secure password manager designed to help you store and manage
+credentials safely. Passwords are encrypted using a key derived from your
+<strong>master password</strong>, ensuring that only you can access your stored data.
+The system also includes tools for analyzing password strength and working with
+secure password hashes.
+</p>
+
+<h2>Services</h2>
+
+<ul>
+  <li>
+    <strong>Add Password</strong><br>
+    Store credentials for a service securely in your encrypted vault.
+  </li>
+  <br>
+  <li>
+    <strong>Delete Password</strong><br>
+    Remove stored credentials from the vault when they are no longer needed.
+  </li>
+  <br>
+  <li>
+    <strong>Check Password Strength</strong><br>
+    Analyze a password to evaluate its strength based on length, complexity,
+    and character diversity.
+  </li>
+  <br>
+  <li>
+    <strong>Hash Password</strong><br>
+    Generate a secure cryptographic hash of a password for safe storage or verification.
+  </li>
+  <br>
+  <li>
+    <strong>Verify Hash</strong><br>
+    Check whether a password matches a previously generated hash.
+  </li>
+</ul>
+
+<h2>Keyboard Shortcuts</h2>
+
+<ul class="shortcut-list">
+  <li><span class="shortcut-label"><strong>Open Help</strong></span><span class="shortcut-key">Ctrl + ?</span></li>
+  <li><span class="shortcut-label"><strong>Home</strong></span><span class="shortcut-key">Ctrl + h</span></li>
+  <li><span class="shortcut-label"><strong>Saved Passwords</strong></span><span class="shortcut-key">Ctrl + S</span></li>
+  <li><span class="shortcut-label"><strong>Add Password</strong></span><span class="shortcut-key">Ctrl + Q</span></li>
+  <li><span class="shortcut-label"><strong>Delete Password</strong></span><span class="shortcut-key">Ctrl + A</span></li>
+  <li><span class="shortcut-label"><strong>Check Password Strength</strong></span><span class="shortcut-key">Ctrl + Z</span></li>
+  <li><span class="shortcut-label"><strong>Hash Password</strong></span><span class="shortcut-key">Ctrl + X</span></li>
+  <li><span class="shortcut-label"><strong>Verify Hash</strong></span><span class="shortcut-key">Ctrl + D</span></li>
+  <li><span class="shortcut-label"><strong>Fast LogOut</strong></span><span class="shortcut-key">Ctrl + Shift + Space</span></li>
+</ul>
+<style>
+.shortcut-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 400px;
+}
+.shortcut-list li {
+  display: flex;
+  border: none;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+.shortcut-label {
+  flex: 1;
+  text-align: left;
+}
+.shortcut-key {
+  min-width: 140px;
+  text-align: right;
+  font-weight: bold;
+}
+</style>
+</ul>
+<br>
+<button id="close-popup" class="form-button" title="ctrl+h";
+">Close</button>`
+
+    // Add to body
+    document.body.appendChild(popup);
+    
+    document.getElementById('close-popup').addEventListener('click', () => {
+        popup.remove();
+    });
+}
+
+  if (document.getElementById('indc')){
+  setTimeout(function() {
+  document.getElementById('indc').classList.add('fade-out');}, 3000)}
+
+
+
