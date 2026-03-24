@@ -36,7 +36,7 @@
             ps_progressBar.style.backgroundColor = percentageToColorSpectrum(data.time_score, false)
             ps_progressBar.style.color = percentageToColorSpectrum(data.time_score, true)
             
-            ps_entropy.textContent = `ps_Entropy---${data.ps_entropy}`;
+            ps_entropy.textContent = `Entropy---${data.entropy}`;
             ps_crackTime.textContent = `Estimated time to crack---${data.est_time}`;
             ps_entropy.style.color = percentageToColorSpectrum(data.time_score, false)
             ps_crackTime.style.color = percentageToColorSpectrum(data.time_score, false)

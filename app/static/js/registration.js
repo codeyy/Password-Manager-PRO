@@ -78,7 +78,8 @@
             rePasswordInputField.style.border = '';
         }
     });
-
+    
+    
     // Username existence check
     usernameInput.addEventListener("input", function () {
         const words = "This Username Already Exists";
@@ -98,7 +99,6 @@
                         const snowflake = document.createElement('div');
                         snowflake.id = "userexisterror";
                         snowflake.classList.add('facyErrorSnowflake');
-                        snowflake.textContent = word;
                         snowflake.style.left = dist + "vw";
                         snowflake.style.zIndex = 1;
                         snowflake.style.animationDuration = "10s";
@@ -107,6 +107,10 @@
                         snowflake.style.color = "red";
                         snowflake.style.opacity = 1;
                         document.body.appendChild(snowflake);
+                        if (window.innerWidth <= 1400){
+                            snowflake.textContent = words;
+                            break
+                        }else{snowflake.textContent = word;}
                         dist += 1.1;
                     }
                 }
@@ -123,6 +127,7 @@
                     for (let i = 0; i < 28; i++) {
                         await sleep(20);
                         document.getElementById(idd)?.remove();
+                        document.getElementById("userexisterrornnotcrooked")?.remove();
                     }
                 }
             }

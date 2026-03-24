@@ -1,5 +1,5 @@
 // hash-password
-    const hp_passwordInput         = document.getElementById('hp_check_password');
+    const hp_passwordInput         = document.getElementById('hp_password');
     const hp_toggleButton          = document.getElementById('hp_toggle-Password');
     const hp_submitButton          = document.getElementById('hp_submitButton');
     const hp_algoInputField        = document.getElementById("hp_algorithm");
@@ -18,10 +18,14 @@
     });
 
     hp_submitButton.addEventListener('click', function (event) {
-        if (hp_passwordInput.value.trim() === '') {
-            event.preventDefault();
-            usernameInput.style.border = '1px solid red';
-        }
+    if (hp_passwordInput.value === '') {
+        event.preventDefault();
+        hp_passwordInput.style.border = '1px solid red';
+    }
+    if (hp_hiddenInputField.value === '') {
+        event.preventDefault();
+        hp_hiddenInputField.style.border = '1px solid red';
+    }
     });
     
     hp_opt1.addEventListener('click', function() {
