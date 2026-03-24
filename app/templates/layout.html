@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>PassVault</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="icon" href="../static/images/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  
+  <div id="glow"></div>
+  
+  {% block main %}
+  {% endblock %}
+  
+  {% if indc %}
+  <div id="indc" class="indcglassmorphicpopup" >
+    <h2 class="indch">{{indc}}</h2>
+  </div>
+  {% endif %}
+  
+  
+  <script src="../static/js/global.js" defer ></script>
+</body>
+</html>

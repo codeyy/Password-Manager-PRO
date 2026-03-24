@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block main %}
+
+<nav>
+    <span></span>
+    <div>
+        <a href="/" class="top-buttons" style="text-decoration: none; ">Home</a>
+        <button id="helper_key" class="top-buttons" style="text-decoration: none; font-size: 15px">Help</button>
+    </div>
+</nav>
+
+<form action="/verifyHash" method="post" class="reg_form">
+    <div style="display: flex; justify-content: flex-end; width:fit-content">
+    <input type="password" placeholder="Password" id="vh_check_password" name="password"
+    class="form-input" autocomplete="off" autofocus
+    title="Enter passwords">
+    
+    <span id="vh_toggle_Password" class="toggle-password" style="top: 15%;">Show</span>
+</div>
+<br><br>
+<input type="hash" placeholder="Hash" id="vh_hash" name="phash"
+class="form-input" autocomplete="off"
+title="Enter hash to verify">
+<input type="hidden" id="vh_hdn_algorithm" name="algorithm">
+<br><br>
+<div class="form-input, dropdown" style="width: 10px;">
+    <button type="button" class="form-input, form-button" id="vh_algorithm" style="width: 150px; height: 40px; text-align: left;">Algorithm</button>
+    <div class="dropdown-content" id="vh_dropdown">
+        <div id="vh_opt1" class="dropdownOptions"> SHA-224</div>
+        <div id="vh_opt2" class="dropdownOptions"> SHA-256</div>
+        <div id="vh_opt3" class="dropdownOptions"> SHA-384</div>
+        <div id="vh_opt4" class="dropdownOptions"> SHA-512</div>
+    </div>
+</div>
+    <br><br>                
+    <input type="submit" value="Verify" class="form-input, form-button" id="vh_submitButton">
+
+    <br><br>
+    {% if eval %}
+    {% endif %}
+</form>
+{% if eval %}
+<div class="glassmorphicHints" style="top: 13%; left: 55%; padding-bottom: 5px; padding-top: 5px;">
+    {% if eval == "Matched"%}
+    <p style="color:rgb(0, 255, 200)">
+        {{eval}}
+    </p>
+    {% else %}
+    <p style="color:rgb(255, 0, 0)">
+        {{eval}}
+    </p>
+    {% endif %}
+</div>
+{% endif %}
+
+
+<script src="../static/js/verify_hash.js" defer ></script>
+{% endblock %}
