@@ -13,8 +13,8 @@ class PasswordEntry(Base):
     category = Column(String, nullable=False, server_default=text("'Not Specified'"))
     
     # Let the database handle the timestamps
-    created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
-    updated_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
+    created_at = Column(String, default=text("STRFTIME('%d-%m-%Y %H-%M-%S', 'now', 'localtime')"))
+    updated_at = Column(String, default=text("STRFTIME('%d-%m-%Y %H-%M-%S', 'now', 'localtime')"))
 
     # Link back to the user
     owner = relationship("User", back_populates="passwords")
