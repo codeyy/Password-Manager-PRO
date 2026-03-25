@@ -36,3 +36,60 @@
         submitButton.textContent = 'Submit';
         form.appendChild(submitButton);
     });
+
+    document.getElementById('sp_delpasswords').addEventListener('click', function () {
+        const sp_targetElement = document.getElementById('sp_main-pass-container');
+        sp_targetElement.innerHTML = '';
+
+        const form = document.createElement('div');
+        form.classList.add("reg_form")
+        sp_targetElement.appendChild(form);
+
+        const label = document.createElement('label');
+        label.textContent = "Verify Your Password: ";
+        label.setAttribute('class', 'pass-label');
+        form.appendChild(label);
+
+        form.appendChild(document.createElement('br'));
+        form.appendChild(document.createElement('br'));
+
+        const passwordInput = document.createElement('input');
+        passwordInput.setAttribute('type', 'password');
+        passwordInput.setAttribute('name', 'password');
+        passwordInput.setAttribute('required', true);
+        passwordInput.setAttribute('autofocus', true);
+        passwordInput.setAttribute('placeholder', 'Password');
+        passwordInput.setAttribute('class', 'form-input');
+        form.appendChild(passwordInput);
+
+        const br = document.createElement('br');
+        form.appendChild(br);
+
+        const submitButton = document.createElement('button');
+        submitButton.setAttribute('type', 'button');
+        submitButton.setAttribute('class', 'form-button');
+        submitButton.style.marginTop = "20px"
+        submitButton.textContent = 'Submit';
+        form.appendChild(submitButton);
+
+        submitButton.addEventListener("click", function(event) {        
+            fetch('/del_passwords_fromPasswords', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    password: passwordInput.value,
+                    deleteThese: delList
+                }),
+                keepalive: true
+            })
+            window.location.href = `/?status=Success`
+        });
+        passwordInput.addEventListener('keydown', function(event) {
+          if (event.key === 'Enter') {
+            submitButton.click();
+          }
+        });
+
+    });
