@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String, LargeBinary
-from .database import Base
+from app.models.database import Base
 from sqlalchemy.orm import relationship
-from dotenv import load_dotenv
-load_dotenv()
+
 
 class User(Base):
     __tablename__ = "users"
