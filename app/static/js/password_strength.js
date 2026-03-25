@@ -16,9 +16,9 @@
 
     ps_passin.addEventListener('input', function(){
         if (ps_passin.value === "") {
-            ps_glass_shell.classList = ""
             ps_crackTime.textContent = ""
             ps_entropy.textContent = ""
+            ps_glass_shell.classList = ""
             return
         }
         ps_glass_shell.classList = "glassmorphicHints"
