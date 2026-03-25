@@ -34,31 +34,30 @@ html, body {
     animation: fallasfancyerror linear infinite;
     user-select: none;
     z-index: 0;
-    font-family: 'Poppins';
+    font-family: 'poppins';
+    transform: skewY(20deg);
 }
 
 
 @keyframes fall {
-    0% {
+    0%, 100%{
         transform: translateY(0) rotate(0deg);
         opacity: 1;
     }
 
-    100% {
-        transform: translateY(110vh) rotate(720deg);
-        opacity: 0.5;
+    50% {
+        transform: translateY(120vh) rotate(720deg);
+        opacity: 0.2;
     }
 }
 @keyframes fallasfancyerror {
-    0% {
+    0%{
         transform: translateY(0) rotate(-30deg);
-        opacity: 1;
         text-shadow: #5502ee;
     }
 
     100% {
-        transform: translateY(110vh) rotate(30deg);
-        opacity: 0.9;
+        transform: translateY(100vh) rotate(30deg);
         text-shadow: red;
     }
 }
@@ -71,13 +70,12 @@ html, body {
     top: 0;
     left: 0;
     width: 200px;
-    height: 200px;
-    border-radius: 50%;
+    height: 100px;
+    border-radius: 30%;
     pointer-events: none;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.307) 0%, rgba(0, 0, 0, 0) 70%);
     filter: blur(70px);
     transform: translate(-50%, -50%);
-    transition: top 0.02s linear, left 0.02s linear;
     z-index: 1;
 
 }
@@ -127,6 +125,7 @@ html, body {
     }
 }
 
+
 .reg-container {
     display: flex;
     justify-content: flex-end;
@@ -148,13 +147,14 @@ html, body {
     background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 1.5px 3px 10px rgba(153, 153, 153, 0.308);
+    transition: box-shadow 0.5s ease-in-out;
 }
 
 .form-input:hover {
-    box-shadow: 0 0 1000px rgba(201, 199, 199, 0.181);
+    box-shadow: 0 0 1000px rgba(153, 153, 153, 0.267);
     transition: box-shadow 0.5s ease-in-out;
 }
 
@@ -185,14 +185,14 @@ html, body {
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 1.5px 3px 10px rgba(153, 153, 153, 0.219);
     transition: background-color 0.5s, color 0.3s;
 }
 
 .form-button:hover {
     color: black;
     cursor: pointer;
-    box-shadow: 100px 0 300px rgba(201, 199, 199, 0.764);
+    box-shadow: 0 0 1000px rgba(153, 153, 153, 0.267);
     transition: box-shadow 0.5s ease-in-out;
     background: rgba(255, 255, 255, 0.349);
     transition: background-color 0.5s, color 0.3s;
@@ -216,6 +216,12 @@ html, body {
     cursor: pointer;
     box-shadow: 100px 0 300px rgba(201, 199, 199, 0.764);
     transition: box-shadow 0.5s ease-in-out;
+}
+
+.top-buttons:active {
+  /* Move the button down by 5px (the shadow height) */
+  padding: 9px;
+  border-radius: 6.5px;
 }
 
 .dropdown {
@@ -282,8 +288,8 @@ nav button {
 
 .dash-table-container {
   position: fixed;
-  top: 13rem;
-  right: 25vw;
+  top: 9vw;
+  right: 22vw;
   max-height: 60vh;     /* limit only AFTER 60% of screen height */
   overflow-y: auto;      /* scroll appears only when needed */
   max-width: 90vw;
@@ -323,9 +329,14 @@ th, td {
 th {
   position: sticky;
   top: 0;
-  background: rgba(0, 0, 0, 0.137);
-  backdrop-filter: blur(1px);
-  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.192);
+  border-radius: 25px;
+  color: rgb(187, 187, 187);
+
+  z-index: 10000;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow: 4px 4px 30px rgba(255, 255, 255, 0.04);
 }
 
 
@@ -347,7 +358,7 @@ th {
     margin-bottom: 20px;
     font-size: 20px;
     font-weight: bold;
-    color: rgba(191, 191, 191, 0.627);
+    color: rgba(191, 191, 191, 0.76);
     font-family: 'Poppins';
 }
 
@@ -440,29 +451,6 @@ th {
     animation: shimmer 2s infinite;
 }
 
-progress {
-  /* Set the overall size */
-  /* Change the default background color of the unfilled bar */
-  background-color: transparent;
-  /* Add a border or other styles */
-  border: 2px solid #141414bd;
-  border-radius: 10px;
-}
-
-/* Note: Styling the filled portion consistently is challenging across browsers. */
-/* Webkit browsers (Chrome, Safari, Edge, Opera) */
-progress::-webkit-progress-value {
-  background-color: #4caf50; /* Green fill color */
-  border-radius: 5px;
-}
-
-/* Firefox */
-progress::-moz-progress-bar {
-  background-color: #4caf50; /* Green fill color */
-  border-radius: 5px;
-}
-
-
 @keyframes shimmer {
     0% {
         background-position: 200% 0;
@@ -480,7 +468,7 @@ progress::-moz-progress-bar {
     font-family: 'Poppins';
 }
 
-.glassmorficpopup{
+.glassmorphicpopup{
     position: fixed; top: 50%; left: 50%;
     color: rgba(230, 230, 230, 0.5);
     transform: translate(-50%, -50%);
@@ -561,9 +549,47 @@ progress::-moz-progress-bar {
 }
 
 
-.dropdownOptions{
+.dropdownOptions {
     font-size: 13px;
     font-weight: bold;
     font-family: 'Poppins';
     cursor: cell;
+}
+.ease-out {
+    --tw-ease: var(--ease-out);
+    transition-timing-function: var(--ease-out);
+}
+.indch {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 400px;
+  animation: fadeout 2s infinite ease-in-out;
+  color: rgba(230, 230, 230, 0.5);
+  visibility: inherit;
+}
+
+.indcglassmorphicpopup{
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    
+    z-index: 10000;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgb(0, 255, 200);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    
+    top: 5%;
+    transition: opacity 1s ease-out;
+}
+
+.fade-out {
+    opacity: 0; 
+    visibility: hidden;
+    transition: visibility 0s linear 1s, opacity 1s ease-out;
+    border: 1px solid rgba(55, 0, 255, 0.973);
 }
