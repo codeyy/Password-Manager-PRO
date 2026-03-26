@@ -10,12 +10,15 @@
 </nav>
 
 <form action="/verifyHash" method="post" class="reg_form">
+    <br><br>
+    <label class="pass-label">Verify Password Hash: </label>
+    <br><br>
     <div style="display: flex; justify-content: flex-end; width:fit-content">
     <input type="password" placeholder="Password" id="vh_check_password" name="password"
     class="form-input" autocomplete="off" autofocus
     title="Enter passwords">
     
-    <span id="vh_toggle_Password" class="toggle-password" style="top: 15%;">Show</span>
+    <span id="vh_toggle_Password" class="toggle-password" style="top: 30.7%;">Show</span>
 </div>
 <br><br>
 <input type="hash" placeholder="Hash" id="vh_hash" name="phash"
@@ -41,7 +44,7 @@ title="Enter hash to verify">
 </form>
 {% if eval %}
 <div class="glassmorphicHints" style="top: 13%; left: 55%; padding-bottom: 5px; padding-top: 5px;">
-    {% if eval == "Matched"%}
+    {% if eval == "Matched !"%}
     <p style="color:rgb(0, 255, 200)">
         {{eval}}
     </p>

@@ -20,9 +20,29 @@
   <div id="indc" class="indcglassmorphicpopup" >
     <h2 class="indch">{{indc}}</h2>
   </div>
-  {% endif %}
+    {% endif %}
   
   
   <script src="../static/js/global.js" defer ></script>
+  <script src="../static/js/help.js" defer ></script>
+  <script src="../static/js/shortcuts.js" defer ></script>
 </body>
+<script>
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  // Read a specific parameter
+  const status = urlParams.get('status');
+
+  if (status === 'success') {
+      const alrtdiv = document.createElement('div');
+      alrtdiv.classList.add("indcglassmorphicpopup")
+      body.appendChild(alrtdiv)
+
+      const alert = document.createElement('h1');
+      alert.classList.add("indch")
+      alert.innerHTML = status
+      alrtdiv.appendChild(alert)
+  }
+</script>
 </html>
