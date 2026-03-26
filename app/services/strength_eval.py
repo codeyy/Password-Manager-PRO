@@ -1,5 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
 
 def strength(password):
     common_passwords = [
@@ -38,8 +36,10 @@ def strength(password):
     "User12345678"
     "112233445566778899"
     "54321"
+    "121212"
 ]
     
+    password = password.strip()
     entropy = 0
     est_time = 0
     data = common_passwords
@@ -49,8 +49,10 @@ def strength(password):
     else:
         char_set = sum(find_charset_size(password))
 
+        password = (has_repeating_characters(password)["deduplicated"])
+
         from math import log2
-        entropy = round(log2(char_set ** len(password)), 2)
+        entropy = round(len(password) * (log2(char_set)))  # round(log2(char_set ** len(password)), 2)
 
     try:
         est_time = ((2 ** entropy) / (10**11))
@@ -90,11 +92,15 @@ def retime(est_time):
         score = 0
         return [sen, score]
     elif est_time < 60:
-        sen = ("Less then a minute")
+        sen = (f"  {round(est_time, 2)} Seconds.")
         score = 1
         return [sen, score]
+    elif est_time < 3600:
+        sen = (f"  {round((est_time/60), 2)} Minutes.")
+        score = 2
+        return [sen, score]
     elif est_time < 86400:
-        sen = ("about a Day")
+        sen = (f"  {round((est_time/ 3600), 2)} Hours")
         score = 2
         return [sen, score]
     elif est_time < 604800:
@@ -144,40 +150,85 @@ def strength_check(password):
 
     return 0
 
-def hasher(password, algo="sha256"):
+def hasher(password, algorithm):
+    algorithm = algorithm.lower().strip()
+
     import hashlib
-    
     password = password.encode("utf-8")
     hashed = 0
-    if algo.lower() == "sha256":
+    if algorithm == "sha256":
         hashed = hashlib.sha256(password).hexdigest()
-    elif algo.lower() == "sha224":
+    elif algorithm == "sha224":
         hashed = hashlib.sha224(password).hexdigest()
-    elif algo.lower() == "sha384":
+    elif algorithm == "sha384":
         hashed = hashlib.sha384(password).hexdigest()
-    elif algo.lower() == "sha512":
+    elif algorithm == "sha512":
         hashed = hashlib.sha512(password).hexdigest()
     else:
-        print("Algorithm unrecognizable")
-        return
+        #("Algorithm unrecognizable\n using sha256")
+        hashed = hashlib.sha256(password).hexdigest()
 
-    print(f"\n  Hash:   {hashed}\n")
     return hashed
 
-def verify(phash, password, algo):
-    import hashlib
-    password = password.encode("utf-8")
-    hashed = 0
-    if algo.lower() == "sha256":
-        hashed = hashlib.sha256(password).hexdigest()
-    elif algo.lower() == "sha224":
-        hashed = hashlib.sha224(password).hexdigest()
-    elif algo.lower() == "sha384":
-        hashed = hashlib.sha384(password).hexdigest()
-    elif algo.lower() == "sha512":
-        hashed = hashlib.sha512(password).hexdigest()
-    else:
-        print("Algorithm unrecognizable")
-        return
+#print(hasher("ajdn", "sha512"))
 
-    return phash == hashed
+def verify(phash, password, algorithm):
+    return phash == hasher(password, algorithm)
+
+
+def has_repeating_characters(password):
+    """
+    This function scans through the password string to identify sequences of 
+    consecutive identical characters. Any sequence with 3 or more consecutive 
+    identical characters is flagged as a repeat.
+        password (str): The password string to analyze for repeating characters
+        dict: A dictionary containing:
+            - 'has_repeats' (bool): True if password contains 3+ consecutive 
+                                    identical characters, False otherwise
+            - 'details' (list): List of integers representing the count of each 
+                               repeating sequence (only sequences >= 3 are included)
+            - 'deduplicated' (str): The password with all consecutive duplicate 
+                                   characters collapsed into a single character
+    Example:
+        >>> has_repeating_characters("passs123wwww")
+        {
+            'has_repeats': True,
+            'details': [4, 4],
+            'deduplicated': 'pas123w'
+        >>> has_repeating_characters("pass123")
+        {
+            'has_repeats': False,
+            'details': [],
+            'deduplicated': 'pas123'
+
+    Check if password has repeating characters and return deduplicated version.
+    
+    Args:
+        password: The password string to check
+    
+    Returns:
+        Dictionary with 'has_repeats' (bool), 'details' (list of repeat counts),
+        and 'deduplicated' (password with consecutive duplicates removed)
+    """
+    repeats = []
+    deduplicated = []
+    threshold = 4
+    i = 0
+    
+    while i < len(password):
+        count = 1
+        while i + count < len(password) and password[i] == password[i + count]:
+            count += 1
+        
+        if count >= threshold:
+            repeats.append(count)
+        
+        deduplicated.append(password[i])
+        print(password[i] * round(count/4))
+        i += count
+    
+    return {
+        'has_repeats': len(repeats) > 0,
+        'details': repeats,
+        'deduplicated': ''.join(deduplicated)
+    }
