@@ -7,3 +7,4 @@ sqlalchemy
 itsdangerous
 werkzeug
 Jinja2
+python-dotenv
