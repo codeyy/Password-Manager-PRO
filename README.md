@@ -96,15 +96,15 @@ Designed with both **security and performance in mind**, the application handles
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/codeyy/project.git
-cd project
+git clone https://github.com/codeyy/Password-Manager-PRO
+cd Password-Manager-PRO
 ```
 
 ### 2️⃣ Create a virtual environment
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\\Scripts\\activate
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 ```
 
 ### 3️⃣ Install dependencies
@@ -117,12 +117,13 @@ pip install -r requirements.txt
 
 ```bash
 uvicorn app.main:app --reload
+Note: run this from root directory only i.e. Password-Manager-PRO
 ```
 
 Then open:
 
 ```
-http://127.0.0.1:8000/
+http://localhost:8000/
 ```
 
 ---
