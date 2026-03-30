@@ -1,0 +1,640 @@
+/* ============================================================================
+  GLOBAL STYLES
+  ============================================================================ */
+
+body {
+   background-image: url("../images/testback2.2.jpg");
+   background-size: cover;
+   background-position: center center;
+   background-repeat: no-repeat;
+   background-attachment: fixed;
+   position: relative;
+   overflow: hidden;
+}
+
+html,
+body {
+   margin: 0;
+   padding: 0;
+}
+
+/* ============================================================================
+  BACKGROUND EFFECTS - SNOWFLAKES
+  ============================================================================ */
+
+.snowflake {
+   position: fixed;
+   top: -10%;
+   color: rgba(255, 255, 255, 0.3);
+   font-size: 10px;
+   animation: fall linear infinite;
+   user-select: none;
+   z-index: 0;
+}
+
+.facyErrorSnowflake {
+   position: fixed;
+   top: -5%;
+   color: rgb(255, 0, 0);
+   font-size: 10px;
+   font-family: 'poppins';
+   animation: fallasfancyerror linear infinite;
+   user-select: none;
+   z-index: 0;
+   transform: skewY(20deg);
+}
+
+/* Keyframe animations for falling snowflakes */
+@keyframes fall {
+   0%,
+   100% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+   }
+
+   50% {
+      transform: translateY(120vh) rotate(720deg);
+      opacity: 0.2;
+   }
+}
+
+@keyframes fallasfancyerror {
+   0% {
+      transform: translateY(0) rotate(-30deg);
+      text-shadow: #5502ee;
+   }
+
+   100% {
+      transform: translateY(100vh) rotate(30deg);
+      text-shadow: red;
+   }
+}
+
+/* ============================================================================
+  GLOW EFFECT
+  ============================================================================ */
+
+#glow {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 200px;
+   height: 100px;
+   border-radius: 30%;
+   pointer-events: none;
+   background: radial-gradient(circle, rgba(255, 255, 255, 0.307) 0%, rgba(0, 0, 0, 0) 70%);
+   filter: blur(70px);
+   transform: translate(-50%, -50%);
+   z-index: 1;
+}
+
+/* ============================================================================
+  NAVIGATION
+  ============================================================================ */
+
+nav {
+   max-width: 80vw;
+   margin: auto;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   height: 80px;
+}
+
+nav img {
+   position: relative;
+   z-index: 2;
+   width: 80px;
+   color: red;
+}
+
+nav button {
+   position: relative;
+   z-index: 2;
+}
+
+/* ============================================================================
+  FORM ELEMENTS - SHARED STYLES
+  ============================================================================ */
+
+.form-input {
+   font-family: 'Poppins';
+   font-weight: 700;
+   color: white;
+   outline: none;
+   padding: 15px;
+   padding-right: 150px;
+   z-index: 10000;
+   background: rgba(255, 255, 255, 0.04);
+   backdrop-filter: blur(3px);
+   -webkit-backdrop-filter: blur(12px);
+   border: 1px solid rgba(255, 255, 255, 0.144);
+   border-radius: 16px;
+   box-shadow: 1.5px 3px 10px rgba(153, 153, 153, 0.308);
+   transition: box-shadow 0.5s ease-in-out;
+}
+
+.form-input:hover {
+   box-shadow: 0 0 1000px rgba(153, 153, 153, 0.267);
+   transition: box-shadow 0.5s ease-in-out;
+}
+
+.form-button {
+   padding: 10px;
+   padding-right: 50px;
+   outline: none;
+   border: none;
+   border-radius: 16px;
+   color: rgba(255, 255, 255, 0.49);
+   z-index: 10000;
+   background: rgba(255, 255, 255, 0.04);
+   backdrop-filter: blur(3px);
+   -webkit-backdrop-filter: blur(12px);
+   border: 1px solid rgba(255, 255, 255, 0.2);
+   box-shadow: 1.5px 3px 10px rgba(153, 153, 153, 0.219);
+   transition: background-color 0.5s, color 0.3s;
+}
+
+.form-button:hover {
+   color: black;
+   cursor: pointer;
+   background: rgba(255, 255, 255, 0.349);
+   box-shadow: 0 0 1000px rgba(153, 153, 153, 0.267);
+   transition: box-shadow 0.5s ease-in-out, background-color 0.5s, color 0.3s;
+}
+
+/* ============================================================================
+  REGISTRATION FORM
+  ============================================================================ */
+
+.reg_form {
+   position: fixed;
+   top: 40%;
+   right: 25vw;
+   max-width: 90vw;
+   width: 320px;
+   padding: 2rem;
+   background: transparent;
+   border-radius: 10px;
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+   transform: translateY(-50%);
+   z-index: 2;
+}
+
+.reg-container {
+   display: flex;
+   justify-content: flex-end;
+   align-items: center;
+   margin-right: 30rem;
+   padding: 0 5vw;
+}
+
+.reg_hints {
+   color: rgba(255, 97, 97, 0.627);
+   font-size: 13px;
+   font-weight: bold;
+   text-align: center;
+   font-family: 'Poppins';
+}
+
+/* ============================================================================
+  PASSWORD FORM
+  ============================================================================ */
+
+.Pass_form {
+   position: fixed;
+   top: 40%;
+   right: 25vw;
+   max-width: 90vw;
+   width: 320px;
+   padding: 2rem;
+   background: transparent;
+   border-radius: 10px;
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+   color: white;
+   transform: translateY(-50%);
+}
+
+.pass-label {
+   margin-bottom: 20px;
+   font-size: 20px;
+   font-weight: bold;
+   color: rgba(191, 191, 191, 0.76);
+   font-family: 'Poppins';
+}
+
+.pass-table-rows {
+   margin: 10px 0;
+   padding: 10px;
+   border-radius: 10px;
+}
+
+/* ============================================================================
+  TOGGLE PASSWORD VISIBILITY
+  ============================================================================ */
+
+.toggle-password {
+   position: fixed;
+   right: 42px;
+   font-size: 15px;
+   z-index: 10001;
+   color: #777;
+   cursor: pointer;
+   user-select: none;
+   transition: color 0.2s ease;
+}
+
+/* ============================================================================
+  TOP NAVIGATION BUTTONS
+  ============================================================================ */
+
+.top-buttons {
+   margin-right: 18px;
+   margin-bottom: 0;
+   padding: 10px;
+   border-radius: 7.5px;
+   outline: none;
+   border: none;
+   background-color: rgba(123, 123, 123, 0.314);
+   color: rgba(255, 255, 255, 0.49);
+   box-shadow: 0 3px 8px rgba(201, 199, 199, 0.46);
+   transition: color 0.4s ease-in-out, box-shadow 0.5s ease-in-out;
+   text-decoration: none;
+}
+
+.top-buttons:hover {
+   background-color: rgba(255, 255, 255, 0.49);
+   color: black;
+   cursor: pointer;
+   box-shadow: 100px 0 300px rgba(201, 199, 199, 0.764);
+}
+
+.top-buttons:active {
+   padding: 9px;
+   border-radius: 6.5px;
+}
+
+.top-buttons-transition {
+   color: #00ccff;
+   transition: color 0.4s ease-in-out;
+}
+
+/* ============================================================================
+  DROPDOWN MENU
+  ============================================================================ */
+
+.dropdown {
+   position: relative;
+   display: inline-block;
+}
+
+.dropdown-content {
+   display: none;
+   position: absolute;
+   top: 100%;
+   left: 0;
+   min-width: 200px;
+   margin-top: 0;
+   z-index: 10000;
+   background: rgba(255, 255, 255, 0.1);
+   backdrop-filter: blur(5px);
+   -webkit-backdrop-filter: blur(12px);
+   border: 1px solid rgba(255, 255, 255, 0.2);
+   border-radius: 16px;
+   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+   transition: opacity 100ms ease-in-out;
+}
+
+.dropdown-content .dropdownOptions {
+   display: block;
+   padding: 12px 16px;
+   color: rgba(255, 255, 255, 0.49);
+   text-decoration: none;
+   font-family: 'Poppins';
+   font-size: 13px;
+   font-weight: bold;
+   cursor: cell;
+   transition: background-color 0.5s ease;
+}
+
+.dropdown-content .dropdownOptions:hover {
+   background-color: rgba(255, 255, 255, 0.144);
+   color: black;
+   border-radius: 7.5px;
+}
+
+.dropdown:hover .dropdown-content {
+   display: block;
+}
+
+/* ============================================================================
+  DATA TABLE
+  ============================================================================ */
+
+.dash-table-container {
+   position: fixed;
+   top: 15vw;
+   right: 22vw;
+   max-width: 90vw;
+   max-height: 60vh;
+   overflow-y: auto;
+   color: white;
+   z-index: 10000;
+   background: rgba(255, 255, 255, 0.04);
+   backdrop-filter: blur(3px);
+   -webkit-backdrop-filter: blur(12px);
+   border: 1px solid rgba(255, 255, 255, 0.2);
+   border-radius: 16px;
+   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+   scrollbar-width: none;
+   -ms-overflow-style: none;
+}
+
+.dash-table-container::-webkit-scrollbar {
+   display: none;
+}
+
+table {
+   position: static;
+   width: 100%;
+   border-collapse: separate;
+   border-spacing: 40px 15px;
+   background: transparent;
+   font-family: 'Poppins';
+}
+
+th,
+td {
+   padding: 10px;
+   text-align: center;
+   color: white;
+}
+
+th {
+   position: sticky;
+   top: 0;
+   color: rgb(187, 187, 187);
+   background: rgba(0, 0, 0, 0.192);
+   border-radius: 25px;
+   z-index: 10000;
+   backdrop-filter: blur(30px);
+   -webkit-backdrop-filter: blur(30px);
+   box-shadow: 4px 4px 30px rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================================================
+  ERROR & MESSAGE STYLES
+  ============================================================================ */
+
+.top-error {
+   color: rgb(246, 63, 63);
+   font-size: 20px;
+   font-weight: bolder;
+   text-align: center;
+   font-family: 'Poppins';
+}
+
+.update_msg {
+   color: rgb(255, 0, 0);
+   font-size: 20px;
+   font-weight: bolder;
+   text-align: right;
+   font-family: 'Poppins';
+   margin-right: 20px;
+   background: transparent;
+   border: none;
+   cursor: default;
+   pointer-events: none;
+   text-shadow: 0 0 10px rgba(97, 255, 255, 0.52);
+   animation: glow 1.5s infinite;
+}
+
+/* ============================================================================
+  HINTS & INFORMATION TEXT
+  ============================================================================ */
+
+.hints {
+   width: 300px;
+   height: 150px;
+   margin: 50px;
+   margin-left: 600px;
+   color: #5502ee;
+   font-size: 13px;
+   font-weight: bold;
+   text-align: center;
+   font-family: 'Poppins';
+   display: grid;
+   place-content: center;
+}
+
+.ttttttttttt {
+   color: rgba(18, 81, 255, 0.627);
+   font-size: 13px;
+   font-weight: bold;
+   text-align: center;
+   font-family: 'Poppins';
+}
+
+/* ============================================================================
+  PROGRESS INDICATORS
+  ============================================================================ */
+
+.progress-container {
+   width: 100%;
+   height: 30px;
+   background-color: #fdf6f610;
+   border-radius: 10px;
+   overflow: hidden;
+}
+
+.progress-bar {
+   height: 100%;
+   font-weight: bold;
+   text-align: center;
+   line-height: 30px;
+   transition: width 0.5s ease;
+}
+
+.gradient-progress {
+   width: 100%;
+   height: 8px;
+   margin: 15px 0;
+   background: rgba(255, 255, 255, 0.1);
+   border-radius: 10px;
+   overflow: hidden;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.gradient-progress::after {
+   content: '';
+   display: block;
+   width: 0%;
+   height: 100%;
+   background: linear-gradient(90deg, #00ff88, #00ccff, #0088ff, #ff00ff);
+   background-size: 200% 100%;
+   border-radius: 10px;
+   box-shadow: 0 0 15px rgba(0, 255, 200, 0.6);
+   animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+   0% {
+      background-position: 200% 0;
+   }
+
+   100% {
+      background-position: -200% 0;
+   }
+}
+
+/* ============================================================================
+  GLASSMORPHISM COMPONENTS
+  ============================================================================ */
+
+.glassmorphicpopup,
+.glassmorphicHints {
+   position: fixed;
+   padding: 20px;
+   z-index: 10000;
+   background: rgba(255, 255, 255, 0.1);
+   backdrop-filter: blur(5px);
+   -webkit-backdrop-filter: blur(12px);
+   border: 1px solid rgba(255, 255, 255, 0.2);
+   border-radius: 16px;
+   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+   transition: opacity 100ms ease-in-out;
+}
+
+.glassmorphicpopup {
+   top: 50%;
+   left: 50%;
+   color: rgba(230, 230, 230, 0.5);
+   transform: translate(-50%, -50%);
+}
+
+.glassmorphicHints {
+   top: 20%;
+   left: 35%;
+   color: #5900ff;
+   font-weight: bolder;
+}
+
+.indcglassmorphicpopup {
+   position: fixed;
+   top: 5%;
+   left: 50%;
+   padding: 20px;
+   z-index: 10000;
+   background: rgba(255, 255, 255, 0.04);
+   backdrop-filter: blur(3px);
+   -webkit-backdrop-filter: blur(12px);
+   border: 1px solid rgb(0, 255, 200);
+   border-radius: 16px;
+   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+   transform: translate(-50%, -50%);
+   transition: opacity 1s ease-out;
+}
+
+.fade-out {
+   opacity: 0;
+   visibility: hidden;
+   border: 1px solid rgba(55, 0, 255, 0.973);
+   transition: visibility 0s linear 1s, opacity 1s ease-out;
+}
+
+/* ============================================================================
+  MISCELLANEOUS
+  ============================================================================ */
+
+.page-header {
+   position: absolute;
+   top: 50vh;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   display: flex;
+   justify-content: flex-end;
+   align-items: center;
+   padding: 0;
+}
+
+.wave-container {
+   position: absolute;
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   height: 200px;
+}
+
+.bar {
+   position: absolute;
+   width: 15px;
+   height: 20px;
+   background-color: #3498db;
+   border-radius: 10px;
+   animation: wavePulse 2s infinite ease-in-out;
+}
+
+.bar:nth-child(1) { animation-delay: 0s; }
+.bar:nth-child(2) { animation-delay: 0.2s; }
+.bar:nth-child(3) { animation-delay: 0.4s; }
+.bar:nth-child(4) { animation-delay: 0.6s; }
+.bar:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes wavePulse {
+   0%,
+   100% {
+      height: 20px;
+      opacity: 0.5;
+      background-color: #00ff9585;
+   }
+
+   50% {
+      height: 100vh;
+      opacity: 1;
+      background-color: #3700ff85;
+   }
+}
+
+.indch {
+   max-width: 400px;
+   margin: 0;
+   padding: 0;
+   width: 100%;
+   list-style: none;
+   color: rgba(230, 230, 230, 0.5);
+   visibility: inherit;
+   animation: fadeout 2s infinite ease-in-out;
+}
+
+.ease-out {
+   --tw-ease: var(--ease-out);
+   transition-timing-function: var(--ease-out);
+}
+
+/* ============================================================================
+  RESPONSIVE DESIGN
+  ============================================================================ */
+
+@media (max-width: 1000px) {
+   .dash-table-container {
+      right: 0;
+      left: 5px;
+      width: 100%;
+      padding: 0;
+      box-sizing: border-box;
+   }
+}
+
+@media (max-width: 530px) {
+   .reg_form {
+      right: 50%;
+      width: 65%;
+      transform: translate(50%, -50%);
+   }
+
+   .form-input {
+      padding: 15px;
+      padding-right: 150px;
+   }
+}
