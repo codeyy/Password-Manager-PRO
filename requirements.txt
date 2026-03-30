@@ -8,3 +8,4 @@ itsdangerous
 werkzeug
 Jinja2
 python-dotenv
+python_multipart
