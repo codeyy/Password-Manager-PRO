@@ -2,54 +2,78 @@
 <html lang="en">
 
 <head>
-  <title>PassVault</title>
+  <!-- Meta Information -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PassVault</title>
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="../static/css/style.css">
+
+  <!-- Favicon -->
   <link rel="icon" href="../static/images/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
+  <!-- Background glow effect -->
   <div id="glow"></div>
 
-    <div class="page-header" style="justify-content: flex-start;">
-<!-- Left Wave -->
-<div class="wave-container" style="justify-content: flex-start;">
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-</div>
+  <!-- Header with left wave animation -->
+  <div class="page-header" style="justify-content: flex-start;">
+    <div class="wave-container" style="justify-content: flex-start;">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
 
-<!-- Right Wave -->
-<div class="wave-container" style="justify-content: flex-end;">
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-</div>
-</div>
+    <!-- Right wave animation -->
+    <div class="wave-container" style="justify-content: flex-end;">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </div>
+
+  <!-- Header with right wave animation -->
   <div class="page-header" style="justify-content: flex-end; margin-right: 20px;">
-<!-- Left Wave -->
-<div class="wave-container" >
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-</div>
+    <div class="wave-container">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
 
-<!-- Right Wave -->
-<div class="wave-container" >
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-</div>
-</div>
+    <div class="wave-container">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </div>
 
+  <!-- Main content block -->
   {% block main %}
-
   {% endblock %}
-  
+
+  <!-- Indicator notification popup -->
   {% if indc %}
-<div id="indc" class="indcglassmorphicpopup" >
-    <h2 class="indch">{{indc}}</h2>
-</div>
-{% endif %}
-  
-<script src="../static/js/global.js" defer ></script>
+  <div id="indc" class="indcglassmorphicpopup">
+    <h2 class="indch">{{ indc }}</h2>
+  </div>
+  {% endif %}
+
+  <!-- Scripts -->
+  <script src="../static/js/global.js" defer></script>
 </body>
 
 </html>

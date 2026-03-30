@@ -1,30 +1,66 @@
 {% extends "logedout-layout.html" %}
 {% block main %}
 
+<!-- Navigation Bar -->
 <nav>
     <span></span>
-    <a href="/register" class="form-button" style="text-decoration: none; float: right; margin-right: 6vw">Register</a>
+    <a href="/register" class="form-button" style="text-decoration: none; float: right; margin-right: 6vw">
+        Register
+    </a>
 </nav>
 
+<!-- Login Form -->
 <form action="/login" method="post" class="reg_form">
     <br><br>
+    
     <label class="pass-label">Login:</label>
     <br><br>
 
-    <input type="text" placeholder="Username" id="log-username" name="username" class="form-input" autocomplete="off"><br><br>
+    <!-- Username Input -->
+    <input 
+        type="text" 
+        placeholder="Username" 
+        id="log-username" 
+        name="username" 
+        class="form-input" 
+        autocomplete="off"
+    >
+    <br><br>
 
-    <input type="password" placeholder="Password" id="log-password" name="password" class="form-input" autocomplete="off">
+    <!-- Password Input -->
+    <input 
+        type="password" 
+        placeholder="Password" 
+        id="log-password" 
+        name="password" 
+        class="form-input" 
+        autocomplete="off"
+    >
 
-    <span id="toggle-log-Password" class="toggle-password" style="top: 58.2%;">Show</span>
+    <!-- Password Visibility Toggle -->
+    <span id="toggle-log-Password" class="toggle-password" style="top: 58.2%;">
+        Show
+    </span>
 
     <br><br>
 
-    <input type="submit" value="Login" class="form-button" id="log-submit">
+    <!-- Submit Button -->
+    <input 
+        type="submit" 
+        value="Login" 
+        class="form-button" 
+        id="log-submit"
+    >
 </form>
+
+<!-- Error Message Display -->
 {% if error %}
 <div id="indc" class="indcglassmorphicpopup" style="border: 1px solid red;">
-    <h2 class="indch">{{error}}</h2>
+    <h2 class="indch">{{ error }}</h2>
 </div>
 {% endif %}
-<script src="../static/js/login.js" defer ></script>
+
+<!-- Login Script -->
+<script src="../static/js/login.js" defer></script>
+
 {% endblock %}

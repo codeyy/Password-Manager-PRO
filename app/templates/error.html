@@ -2,58 +2,131 @@
 <html lang="en">
 
 <head>
-  <title>PassVault</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PassVault - Error</title>
+  
   <style>
-      body {
-          background-image: url('../static/images/back.jpg');
-          background-size: cover;
-          /* Scales the image to cover the entire element */
-          background-position: center center;
-          /* Centers the image */
-          background-repeat: no-repeat;
-          /* Prevents image tiling */
-          background-attachment: fixed;
-          /* Keeps the background image fixed during scrolling */
-          position: relative;
-          overflow: hidden;
-        }
-    </style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-image: url('../static/images/back.jpg');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+    }
+
+    /* Glow effect container */
+    #glow {
+      position: fixed;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(0, 255, 204, 0.2), transparent);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    /* Main heading */
+    h1 {
+      text-align: center;
+      margin-top: 5vh;
+      font-size: 5vw;
+      color: white;
+      text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    }
+
+    /* Error message heading */
+    h2 {
+      text-align: center;
+      margin-top: 20vh;
+      font-size: 5vw;
+      color: white;
+      text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    }
+
+    /* Back link */
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 5vh;
+      font-size: 2vw;
+      color: #00ffff;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+
+    a:hover {
+      opacity: 0.8;
+    }
+
+    /* Snowflake animation */
+    .snowflake {
+      position: fixed;
+      top: -10vh;
+      color: rgba(0, 255, 204, 0.733);
+      opacity: 0.5;
+      z-index: 1;
+      animation: fall linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotateZ(360deg);
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <!-- Glow cursor effect -->
   <div id="glow"></div>
-  
-    <h1 style="text-align: center; margin-top: 5vh; font-size: 5vw; color: white;"> SNAP! </h>
-    <h2 style="text-align: center; margin-top: 20vh; font-size: 5vw; color: white;">{{ error }}</h1>
-    <a href="/" style="display: block; text-align: center; margin-top: 5vh; font-size: 2vw; color: #00ffff; ">Go Back</a>
 
+  <!-- Main content -->
+  <h1>SNAP!</h1>
+  <h2>{{ error }}</h2>
+  <a href="/">Go Back</a>
+
+  <!-- Cursor tracking script -->
+  <script>
+    const glow = document.getElementById('glow');
+    document.addEventListener('mousemove', (e) => {
+      glow.style.top = e.clientY + 'px';
+      glow.style.left = e.clientX + 'px';
+    });
+  </script>
+
+  <!-- Snowflake generation script -->
+  <script>
+    const SNOWFLAKE_COUNT = 60;
+    const MIN_DURATION = 5;
+    const MAX_DURATION = 15;
+    const MIN_SIZE = 7;
+    const MAX_SIZE = 17;
+
+    for (let i = 0; i < SNOWFLAKE_COUNT; i++) {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.textContent = String.fromCharCode(Math.random() * 100);
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.animationDuration = (MIN_DURATION + Math.random() * (MAX_DURATION - MIN_DURATION)) + 's';
+      snowflake.style.fontSize = (MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE)) + 'px';
+      snowflake.style.animationDelay = Math.random() * 10 + 's';
+      document.body.appendChild(snowflake);
+    }
+  </script>
 </body>
-<script>
-  const glow = document.getElementById('glow');
-
-  document.addEventListener('mousemove', (e) => {
-    glow.style.top = e.clientY + 'px';
-    glow.style.left = e.clientX + 'px';
-  });
-</script>
-<script>
-  const snowCount = 60; // Number of snowflakes
-  for (let i = 0; i < snowCount; i++) {
-    const snowflake = document.createElement('div');
-    snowflake.classList.add('snowflake');
-    snowflake.textContent = String.fromCharCode(Math.random() * 100); // Snowflake character
-    snowflake.style.left = Math.random() * 100 + "vw";
-    snowflake.style.zIndex = Math.floor(Math.random() - 1);
-    snowflake.style.animationDuration = 5 + Math.random() * 10 + "s";
-    snowflake.style.fontSize = 7 + Math.random() * 10 + "px";
-    snowflake.style.animationDelay = Math.random() * 10 + "s";
-    snowflake.style.color = "rgba(0, 255, 204, 0.733)";
-    snowflake.style.opacity = 0.5;
-    snowflake.style.zIndex = 1;
-    document.body.appendChild(snowflake);
-  }
-</script>
 
 </html>

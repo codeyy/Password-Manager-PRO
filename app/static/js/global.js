@@ -19,7 +19,7 @@
     snowflake.style.animationDuration = 10 + Math.random() * 10 + "s";
     snowflake.style.fontSize = 8 + Math.random() * 10 + "px";
     snowflake.style.animationDelay = Math.random() *10 + "s";
-    snowflake.style.color = `rgba(0, ${Math.random() * 240}, 255, 0.733)`;
+    snowflake.style.color = `rgba(0, ${Math.random() * 240}, 255, 0.9)`;
     snowflake.style.opacity = 0.6;
     snowflake.style.zIndex = 1;
     document.body.appendChild(snowflake);
@@ -33,7 +33,7 @@
     snowflake.style.animationDuration = 10 + Math.random() * 10 + "s";
     snowflake.style.fontSize = 7 + Math.random() * 10 + "px";
     snowflake.style.animationDelay = Math.random() * 10 + "s";
-    snowflake.style.color = `rgba(${Math.random() * 90}, 0, 255, 0.733)`;
+    snowflake.style.color = `rgba(${Math.random() * 90}, 0, 255, 9)`;
     snowflake.style.opacity = 0.5;
     snowflake.style.zIndex = 1;
     document.body.appendChild(snowflake);
