@@ -18,7 +18,6 @@
         this.textContent = type === 'password' ? 'Show' : 'Hide';
     });
 
-
     vh_submitButton.addEventListener('click', function (event) {
         if (vh_passwordInput.value.trim() === '') {
             event.preventDefault();
@@ -32,7 +31,6 @@
             event.preventDefault();
             vh_algoInputField.style.border = '1px solid red';
         }else{vh_algoInputField.style.border = '';}
-        
     });
 
     vh_opt1.addEventListener('click', function() {

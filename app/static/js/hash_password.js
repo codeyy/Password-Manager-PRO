@@ -18,14 +18,18 @@
     });
 
     hp_submitButton.addEventListener('click', function (event) {
-    if (hp_passwordInput.value === '') {
-        event.preventDefault();
-        hp_passwordInput.style.border = '1px solid red';
-    }
-    if (hp_hiddenInputField.value === '') {
-        event.preventDefault();
-        hp_hiddenInputField.style.border = '1px solid red';
-    }
+        if (hp_passwordInput.value.trim() === '') {
+            event.preventDefault();
+            hp_passwordInput.style.border = '1px solid red';
+        }else{hp_passwordInput.style.border = '';}
+        if (hp_hashInputField.value.trim() === '') {
+            event.preventDefault();
+            hp_hashInputField.style.border = '1px solid red';
+        }else{hp_hashInputField.style.border = '';}
+        if (hp_hiddenInputField.value === '') {
+            event.preventDefault();
+            hp_algoInputField.style.border = '1px solid red';
+        }else{hp_algoInputField.style.border = '';}
     });
     
     hp_opt1.addEventListener('click', function() {
