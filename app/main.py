@@ -21,7 +21,7 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=os.urandom(24),
     https_only=False,
-    max_age= 8400, 
+    max_age= 84000, 
 )
 
 app.include_router(router)
@@ -33,10 +33,11 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     TEMPLATES = os.path.join(BASE_DIR, "app\\templates")
     templates = Jinja2Templates(directory=TEMPLATES)
     return templates.TemplateResponse(
-        "error.html", 
-        {"request": request, "error": str(exc.status_code)+" "+str(exc.detail)},
-        status_code=exc.status_code
-    )
+    request=request,
+    name="error.html",
+    context={"error": str(exc.status_code)+" "+str(exc.detail)},
+    status_code=exc.status_code
+)
 
 # 2. Handle Unexpected Server Errors (500)
 @app.exception_handler(Exception)
@@ -44,10 +45,11 @@ async def generic_exception_handler(request: Request, exc: Exception):
     TEMPLATES = os.path.join(BASE_DIR, "app\\templates")
     templates = Jinja2Templates(directory=TEMPLATES)
     return templates.TemplateResponse(
-        "error.html", 
-        {"request": request, "error": " A serious server error occurred."},
-        status_code=500
-    )
+    request=request,
+    name="error.html",
+    context={"error": "A serious server error occurred."},
+    status_code=500
+)
 
 
 if __name__ == "__main__":
