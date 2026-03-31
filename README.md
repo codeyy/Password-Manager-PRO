@@ -116,7 +116,7 @@ pip install -r requirements.txt
 ### 4️⃣ Run the application
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn app.main:app
 Note: run this from root directory only i.e. Password-Manager-PRO
 ```
 
