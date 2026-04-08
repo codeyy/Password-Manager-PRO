@@ -1,43 +1,14 @@
 
+
 def strength(password):
-    common_passwords = [
-    "Password123!",
-    "P@ssw0rd123",
-    "P@ssw0rd1234",
-    "P@ssw0rd12345",
-    "P@ssw0rd123456",
-    "Aa123456!",
-    "Welcome123!",
-    "Admin@123",
-    "Summer2025!",
-    "Spring2025!",
-    "Winter2025!",
-    "Fall2024!",
-    "Qwerty123!",
-    "Monkey123!",
-    "Dragon123!",
-    "Iloveyou1!",
-    "Letmein123!",
-    "Pass@123",
-    "Aa@123456",
-    "Changeme1!",
-    "Password01!",
-    "Abc@12345",
-    "Admin123!",
-    "Abc123Abc123!",
-    "123!123!",
-    "PasswordPassword",
-    "AdminAdmin123",
-    "Testing123!",
-    "1122334455!!",
-    "Login1234!",
-    "Aaaaaa1!",
-    "Pppasword123",
-    "User12345678"
-    "112233445566778899"
-    "54321"
-    "121212"
-]
+    from pathlib import Path
+    current_dir = Path(__file__).parent
+    JsonOfCommonPasswords = current_dir / "common_passwords.json"
+    
+    common_passwords = []
+    with open(JsonOfCommonPasswords, "r") as f:
+        import json
+        common_passwords = json.load(f)
     
     password = password.strip()
     entropy = 0
@@ -52,10 +23,10 @@ def strength(password):
         password = (has_repeating_characters(password)["deduplicated"])
 
         from math import log2
-        entropy = round(len(password) * (log2(char_set)))  # round(log2(char_set ** len(password)), 2)
+        entropy =round(log2(char_set ** len(password)), 2)  #round(len(password) * (log2(char_set))) 
 
     try:
-        est_time = ((2 ** entropy) / (10**11))
+        est_time = ((2 ** entropy) / (10**12))
     except OverflowError:
         est_time = "infinity"
 
