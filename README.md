@@ -113,10 +113,11 @@ cd Password-Manager-PRO
 ```
 
 ```
-if you have Docker installed in your PC
+Note: if you have Docker installed in your PC
 Then just run
-" docker compose up "
-and open
+"docker compose up"
+in project root terminal
+then open
 http://localhost:8000/
 in your browser
 and you're all set
