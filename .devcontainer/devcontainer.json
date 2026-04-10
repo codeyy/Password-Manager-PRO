@@ -13,12 +13,14 @@
       ]
     }
   },
+  "workspaceFolder": "/workspace",
   "forwardPorts": [8000],
-  "postCreateCommand": "docker compose up",
   "portsAttributes": {
-  "8000": {
-    "label": "App Preview",
-    "onAutoForward": "openBrowser"
-  }
-}
+    "8000": {
+      "label": "Password Manager UI",
+      "onAutoForward": "openBrowser" // This forces the tab to open automatically
+    }
+  },
+  // Use this to ensure the app starts without needing a click
+  "postStartCommand": "docker compose up -d" 
 }
