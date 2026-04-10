@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      # Map the root 'database' folder specifically
+      - ./database:/app/database 
+    environment:
+      # This MUST match the absolute path inside the container
+      - DATABASE_URL=sqlite:////app/database/passvault.db
