@@ -4,6 +4,10 @@
 
 ---
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/codeyy/Password-Manager-PRO)
+
+---
+
 ## 🏷️ Tags
 
 `fastapi` `python` `cybersecurity` `encryption` `password-manager` `sqlite` `sqlalchemy` `jinja2` `aes` `pbkdf2`
