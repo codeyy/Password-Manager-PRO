@@ -7,9 +7,13 @@
  [![Try in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/codeyy/Password-Manager-PRO)
 
 Note: This environment is for demonstration purposes. Data stored in this session is ephemeral and will be deleted when the Codespace is closed.
-
+```
 Codespace creation can take upto 3-4 minutes.
+after which the web app will start automatically
 
+Incase you have popups disabled you have to 
+go to ``ports`` bellow then find port 8000 and ctrl click the url to manually start the web app
+```
 ---
 
 ## 🏷️ Tags
