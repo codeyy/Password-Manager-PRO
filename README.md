@@ -119,6 +119,10 @@ Then just run
 and open
 http://localhost:8000/
 in your browser
+and you're all set
+```
+```
+if not then follow steps bellow
 ```
 
 ### 2️⃣ Create a virtual environment
