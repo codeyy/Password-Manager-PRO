@@ -118,7 +118,7 @@ Then just run
 "docker compose up"
 in project root terminal
 then open
-http://localhost:8000/
+http://localhost:8080/
 in your browser
 and you're all set
 
