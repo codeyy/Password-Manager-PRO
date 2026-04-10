@@ -9,11 +9,13 @@ from typing import Annotated
 
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, delete
+from contextlib import asynccontextmanager
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse, JSONResponse
-from fastapi import APIRouter, Depends, Request, Response, status, Form
+from fastapi import APIRouter, Depends, FastAPI, Request, Response, status, Form
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from app.models.database import Base, engine
 from app.models.users import User
 from app.models.database import get_db
 from app.models.passwords import PasswordEntry
@@ -24,11 +26,13 @@ from app.core.security import gen_salt, derive_key, encrypt_data, decrypt_data
 # Configuration
 # ============================================================================
 
+
 router = APIRouter()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 TEMPLATES = os.path.join(BASE_DIR, "app/", "templates")
 templates = Jinja2Templates(directory=TEMPLATES)
+Base.metadata.create_all(bind=engine)
 
 
 # ============================================================================
