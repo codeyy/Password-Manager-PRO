@@ -112,10 +112,19 @@ git clone https://github.com/codeyy/Password-Manager-PRO
 cd Password-Manager-PRO
 ```
 
+```
+if you have Docker installed in your PC
+Then just run
+" docker compose up "
+and open
+http://localhost:8000/
+in your browser
+```
+
 ### 2️⃣ Create a virtual environment
 
 ```bash
-python -m venv .venv
+python -m venv venv
 source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 ```
 
@@ -136,6 +145,7 @@ Then open:
 
 ```
 http://localhost:8000/
+in your browser
 ```
 
 ---
