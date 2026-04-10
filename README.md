@@ -3,10 +3,13 @@
 > A secure, full-stack password manager built with **FastAPI**, focused on encryption, performance, and clean UI.
 
 ---
+##
+ [![Try in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/codeyy/Password-Manager-PRO)
 
-[![Try in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/codeyy/Password-Manager-PRO)
-`Note: This environment is for demonstration purposes. Data stored in this session is ephemeral and will be deleted when the Codespace is closed.`
-`Codespace can take upto 3-4 minutes `
+Note: This environment is for demonstration purposes. Data stored in this session is ephemeral and will be deleted when the Codespace is closed.
+
+Codespace creation can take upto 3-4 minutes.
+
 ---
 
 ## 🏷️ Tags
