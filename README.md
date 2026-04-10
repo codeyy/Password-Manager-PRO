@@ -4,7 +4,7 @@
 
 ---
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/codeyy/Password-Manager-PRO)
+[![Try in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/codeyy/Password-Manager-PRO)
 
 ---
 
