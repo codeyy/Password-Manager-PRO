@@ -3,6 +3,7 @@ version: '3.8'
 services:
   web:
     build: .
+    image: password-manager-pro:latest
     ports:
       - "8080:8080"
     volumes:
