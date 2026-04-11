@@ -108,47 +108,70 @@ Designed with both **security and performance in mind**, the application handles
 
 ## ⚙️ Installation & Setup
 
-### 1️⃣ Clone the repository
+### 🐳 Run with Docker (Recommended)
+> The fastest way to get the app running without manual configuration.
+
+#### Option 1: Docker Compose (One-Click Setup)
+```
+If you want a truly "plug and play" experience that handles port mapping and database persistence automatically:
+
+Open your terminal in the project root.
+
+Run the command:
+
+Bash
+docker compose up -d
+Open your browser to http://localhost:8000.
+```
+
+#### Option 2: Docker Desktop GUI
+```
+If you prefer using the Docker Desktop interface:
+
+Go to the Images tab and click the Run icon on password-manager-pro.
+
+Crucial: Click on Optional Settings.
+
+In the Host Port field, enter 8000.
+
+Click Run and access the app at localhost:8000.
+```
+
+```
+Note: The app is configured to listen on 0.0.0.0 inside the container. If you encounter a connection error, ensure your Host Port is mapped to 8000.
+```
+
+
+### With source code
+
+#### 1️⃣ Clone the repository
 
 ```bash
 git clone https://github.com/codeyy/Password-Manager-PRO
 cd Password-Manager-PRO
 ```
 
-```
-Note: if you have Docker installed in your PC
-Then just run
-"docker compose up"
-in project root terminal
-then open
-http://localhost:8080/
-in your browser
-and you're all set
-
-Otherwise follow the steps bellow
-```
-
-### 2️⃣ Create a virtual environment
+#### 2️⃣ Create a virtual environment
 
 ```bash
 python -m venv venv
 source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 ```
 
-### 3️⃣ Install dependencies
+#### 3️⃣ Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4️⃣ Run the application
+#### 4️⃣ Run the application
 
 ```bash
 uvicorn app.main:app
 Note: run this from root directory only i.e. Password-Manager-PRO
 ```
 
-Then open:
+#### 5️⃣ Then open:
 
 ```
 http://localhost:8000/
