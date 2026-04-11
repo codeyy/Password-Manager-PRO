@@ -2,4 +2,4 @@
 .pytest_cache/
 *.pyc
 .venv
-.db
+*.db
