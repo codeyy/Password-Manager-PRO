@@ -2,14 +2,12 @@ version: '3.8'
 
 services:
   web:
-    build: .
-    image: password-manager-pro:latest
+    image: ghcr.io/codeyy/password-manager-pro:main # Use your GHCR image!
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
-      # Map the root 'database' folder specifically
+      # Only map the database folder so your passwords don't disappear
       - ./database:/app/database 
     environment:
-      # This MUST match the absolute path inside the container
       - DATABASE_URL=sqlite:////app/database/passvault.db
+    restart: always
