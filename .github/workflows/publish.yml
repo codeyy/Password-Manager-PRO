@@ -3,6 +3,11 @@ name: Build, Test, and Publish
 on:
   push:
     branches: [ "main" ]
+    paths:
+        - '**.py'            # Triggers if any Python file changes
+        - 'Dockerfile'       # Triggers if Docker config changes
+        - 'requirements.txt' # Triggers if dependencies change
+        - '.github/workflows/**' # Triggers if workflow files change
 
 jobs:
   test:
