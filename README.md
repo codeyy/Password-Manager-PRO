@@ -11,10 +11,11 @@ Note: This environment is for demonstration purposes. Data stored in this sessio
 Codespace creation can take upto 3-4 minutes.
 after which the web app will start automatically
 
-Incase you have popups disabled
+Incase you have popups disabled in your browser
 You will have to go to " PORTS " bellow,
 Then find port named "App Preview (8000)"
-and ctrl click the url to manually start the web app
+and ctrl+click the url nest to it,
+to manually start the web-application
 ```
 ---
 
