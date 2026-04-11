@@ -12,7 +12,9 @@ Codespace creation can take upto 3-4 minutes.
 after which the web app will start automatically
 
 Incase you have popups disabled
-You will have to go to " PORTS " bellow, then find port named "App Preview (8000)" and ctrl click the url to manually start the web app
+You will have to go to " PORTS " bellow,
+Then find port named "App Preview (8000)"
+and ctrl click the url to manually start the web app
 ```
 ---
 
