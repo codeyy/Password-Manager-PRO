@@ -1,0 +1,83 @@
+C:.
+|   .env
+|   .gitattributes
+|   .gitignore
+|   docker-compose.yml
+|   Dockerfile                  
+|   pytest.ini
+|   README.md
+|   requirements.txt
+|   __init__.py
+|   
++---.devcontainer
+|       devcontainer.json
+|       
++---app
+|   |   main.py
+|   |   __init__.py
+|   |   
+|   +---api
+|   |       endpoints.py
+|   |       __init__.py
+|   |       
+|   +---core
+|   |       security.py
+|   |       __init__.py
+|   |       
+|   +---models
+|   |       database.py
+|   |       passwords.py
+|   |       users.py
+|   |       
+|   +---services
+|   |       common_passwords.json
+|   |       strength_eval.py
+|   |       __init__.py
+|   |       
+|   +---static
+|   |   +---css
+|   |   |       style.css
+|   |   |       
+|   |   +---images
+|   |   |       background.jpg
+|   |   |       favicon.ico
+|   |   |       favicon.png
+|   |   |       testback1.jpg
+|   |   |       testback2.2.jpg
+|   |   |       testback3.jpg
+|   |   |       testback4.jpg
+|   |   |       
+|   |   \---js
+|   |           add_password.js
+|   |           del_password.js
+|   |           global.js
+|   |           hash_password.js
+|   |           help.js
+|   |           login.js
+|   |           passwords.js
+|   |           password_strength.js
+|   |           registration.js
+|   |           script.js
+|   |           shortcuts.js
+|   |           verify_hash.js
+|   |           
+|   \---templates
+|           add_password.html
+|           dashboard.html
+|           del_password.html
+|           error.html
+|           hash_password.html
+|           layout.html
+|           logedout-layout.html
+|           login.html
+|           passwords.html
+|           password_strength.html
+|           register.html
+|           verify_hash.html
+|           
++---database
+|       passvault.db
+|       
+\---tests
+        test_core.py
+        test_services.py
