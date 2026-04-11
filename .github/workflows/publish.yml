@@ -8,6 +8,8 @@ on:
         - 'Dockerfile'       # Triggers if Docker config changes
         - 'requirements.txt' # Triggers if dependencies change
         - '.github/workflows/**' # Triggers if workflow files change
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   test:
