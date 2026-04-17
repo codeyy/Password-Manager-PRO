@@ -3,7 +3,8 @@
 > A secure, full-stack password manager built with **FastAPI**, focused on encryption, performance, and clean UI.
 
 ---
-##
+---
+### Try in Github Codespaces
  [![Try in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/codeyy/Password-Manager-PRO)
 
 Note: This environment is for demonstration purposes. Data stored in this session is ephemeral and will be deleted when the Codespace is closed.
@@ -17,6 +18,7 @@ Then find port named "App Preview (8000)"
 and ctrl+click the url nest to it,
 to manually start the web-application
 ```
+---
 ---
 
 ## 🏷️ Tags
