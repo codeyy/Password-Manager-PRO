@@ -15,7 +15,7 @@ after which the web app will start automatically
 Incase you have popups disabled in your browser
 You will have to go to " PORTS " bellow,
 Then find port named "App Preview (8000)"
-and ctrl+click the url nest to it,
+and ctrl+click the url next to it,
 to manually start the web-application
 ```
 ---
