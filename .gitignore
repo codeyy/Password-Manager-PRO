@@ -2,4 +2,4 @@
 .pytest_cache/
 *.pyc
 .venv
-database/passvault.db
+*.db

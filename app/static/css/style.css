@@ -333,8 +333,8 @@ nav button {
 
 .dash-table-container {
    position: fixed;
-   top: 15vw;
-   right: 22vw;
+   top: 10vw;
+   right: 24vw;
    max-width: 90vw;
    max-height: 60vh;
    overflow-y: auto;
