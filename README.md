@@ -4,6 +4,10 @@
 
 ---
 ---
+### Try Now
+🚀 **[Live Demo](https://password-manager-pro-2ny0.onrender.com/)**
+
+ 
 ### Try in Github Codespaces
  [![Try in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/codeyy/Password-Manager-PRO)
 
